@@ -42,7 +42,10 @@ gulp.task('scss', function() {
     .on( "error", handleError)
     .pipe(autoprefix('last 2 versions'))
     .pipe(minifyCSS())
-    .pipe(gulp.dest("./lib"))
+    .pipe(gulp.dest(argv.env === 'production'?"./lib": paths.dest ))
+    .pipe(
+    	gulpif(argv.env!='production',livereload())	
+    );
 });
 
 
@@ -69,8 +72,8 @@ gulp.task('demoApp',function(){
 gulp.task('watch',["watchify"],function(){
 	livereload.listen();
 
-	gulp.watch('./demo/build/**/*.js').on('change', livereload.changed);
-	gulp.watch('./lib/**/*.css').on('change', livereload.changed);
+	gulp.watch('./demo/build/**/*').on('change', livereload.changed);
+	gulp.watch('./demo/**/*.css').on('change', livereload.changed);
 	// gulp.watch( paths.html ).on('change', livereload.changed);
 	gulp.watch( 'scss/**/*.scss' ,['scss']);	
 });
@@ -160,6 +163,10 @@ gulp.task('build',['demoApp',"js-es6",'scss']);
 
 gulp.task('serve',["js-es6",'watch']);
 
+gulp.task("try",function(){
+	argv.env = "production";
+	gulp.run(["js-es6"])
+})
 
 // --------- utils ------------
 function handleError(err) {

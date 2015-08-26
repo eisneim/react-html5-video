@@ -8,11 +8,18 @@ class App extends React.Component {
 		]
 
 		return (
-			<div className="container">
-				<header>
-					<h3>React-html5-video</h3>
-					<Video sources={sources} poster="./video/poster.png" />
+			<div>
+				<header className="clearfix">
+					<div className="container">
+						<br/>
+						<h1>React-html5-video</h1>
+						<Video sources={sources} poster="./video/poster.png" />
+					</div>
 				</header>
+				<section className="container clearfix">
+					<p>here are some api you can call</p>
+
+				</section>
 			</div>
 		)
 	}

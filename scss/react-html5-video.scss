@@ -10,5 +10,37 @@
 		-moz-box-sizing: border-box;
 		box-sizing: border-box;
 	}
+	width: auto;
+	position: relative;
+	.r5-overlay{
+		width: 100%;
+		height: 100%;
+		position:absolute;
+		top:0;
+		left:0;
+	}
+	button{
+		background:none;
+		border:none;
+		outline:none;
+	}
+	.r5-seekbar-wraper,.r5-controls{
+		width: 100%;
+	}
+	.r5-controls{
+		text-align: left;
+	}
+	.r5-seekbar-wraper{
 
+	}
+	.r5-volume{
+		width: 30px;
+		display: inline-block;
+	}
+	&.r5-controls--overlay{
+
+	}
+	&.r5-controls--fixed{
+		
+	}
 }

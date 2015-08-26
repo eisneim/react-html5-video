@@ -1,33 +1,67 @@
 import React from "react"
 import path from "path";
+window.r5Debug = require("debug");
+var dd = window.r5Debug("r5");
 
 var videoEvents = ["play","pause","playing","abort","progress","ratechange","canplay","canplaythrough","durationchange","emptied","ended","loadeddata","loadedmetadata","loadstart","seeked","seeking","stalled","suspend","timeupdate","volumechange","waiting","error","encrypted","mozaudioavailable","interruptbegin","interruptend"];
 
 class Video extends React.Component {
 	constructor(){
 		super()
+		// store all public handler here, and return this api object to parent component;
+		this.api = {}; 
+		var pubHandlers = ["togglePlay"];
+		// save public handlers to api object
+		pubHandlers.forEach( name => {
+			this["_"+name] = this.api[name] = this["_"+name].bind(this)
+		});
+		// manually bind all handlers
+		var handlers = ["metaDataLoaded"];
+		handlers.forEach( name => this["_"+name] = this["_"+name].bind(this) )
+		
 	}
 	componentDidMount(){
 		/**
 		 * register some video event listener here;
 		 */
-		this.$node = React.findDOMNode(this);
+		this.$wraper = React.findDOMNode(this);
 		var $video = this.$video = React.findDOMNode( this.refs.video )
-		console.log(this.$video)
+		// set $wrapers width equal to video width, if width props is not set;
+		this.$setWraperDimension(this.$video);
+		$video.addEventListener("loadedmetadata", this._metaDataLoaded )
 
 	}
+	/**
+	 * after metaData Loaded we can get video dimentions and set width,height of video wraper;
+	 */
 	_metaDataLoaded(e){
 		if(this.props.metaDataLoaded && typeof this.props.metaDataLoaded == "function" ){
-			this.props.metaDataLoaded( this.$video );
+			this.props.metaDataLoaded( this.api );
+		}
+		this.$setWraperDimension(this.$video);
+	}
+	_togglePlay(){
+		dd("toggle play")
+		if(!this.state.isPlaying){
+			this.$video.play();
+			this.setState({isPlaying: true})
+		}else{
+			this.$video.pause();
+			this.setState({isPlaying: false})
 		}
 	}
-	_togglePlay(e){
-
+	$setWraperDimension( $video ){
+		if( this.props.width ) return;
+		dd("should set setWraperDimension");
+		if( !this.props.width ){
+			this.$wraper.style.width = ( $video.videoWidth || $video.clientWidth) +"px"
+			this.$wraper.style.height = ($video.videoHeight || $video.clientHeight) +"px"
+		}
 	}
-	getSubtitleTracks( subtitles ){
+	$getSubtitleTracks( subtitles ){
 		return []
 	}
-	getSource( sources ){
+	$getSource( sources ){
 		var $sources = [];
 		for(var ii =0 ;ii<sources.length; ii++){
 			let ss = sources[ii]
@@ -43,20 +77,24 @@ class Video extends React.Component {
 		const { subtitles, loop, autoPlay, poster, sources, controlPanelStyle } = this.props
 		//html5 video options
 		var options = { loop, autoPlay, poster };
+		var wraperStyle = {};
 		if( this.props.width ){
 			options.width = this.props.width 
 			options.height= this.props.height
+			wraperStyle.width = this.props.width+"px";
+			wraperStyle.height = this.props.height+"px";
 		}
 
 		var controlsClass = `r5-controls r5-controls--${controlPanelStyle}`
+		
 
 		return (
-			<div className="r5-wraper">
-				<div className="r5-overlay"></div>
+			<div className="r5-wraper" style={wraperStyle}>
 				<video ref="video" {...options} >
-					{  this.getSource( sources) }
-					{ subtitles && subtitles.length>0? this.getSubtitleTracks(subtitles) : "" }
+					{  this.$getSource( sources) }
+					{ subtitles && subtitles.length>0? this.$getSubtitleTracks(subtitles) : "" }
 				</video>
+				<div className="r5-overlay" onClick={this._togglePlay}></div>
 				<div className={controlsClass}>
 					<div className="r5-seekbar-wraper">
 						<div className="r5-seekbar"></div>
@@ -75,9 +113,6 @@ class Video extends React.Component {
 						</div>
 					</div>
 				</div>
-				
-				<div className=""></div>
-				<div className=""></div>
 			</div>
 		)	
 	}
