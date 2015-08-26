@@ -1,0 +1,14 @@
+@import "vars";
+@import "animation";
+@import "color-palette";
+// @import "layout";
+
+
+.r5-wraper{
+	*, *:before, *:after {
+		 -webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+	}
+
+}

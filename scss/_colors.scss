@@ -1,0 +1,128 @@
+$light_green:#2DCC70;
+$bright_green:#3BCA4C;
+$green:#3BB262;//#3BB262,#28AD60,#3BCA4C
+$dark_green:#28AD60;
+$pale_green:#CCE1A0;//78AF87，699E87
+
+$green_lime:#A0C355;
+$lime:#BADA55;
+
+$pale_cyan:#699E87;
+$cyan:#19BD9C;
+$dark_cyan:#14A085;
+
+$blue:#439ACF;
+$pale_blue:#529DBD;
+$darker_blue:#32425C;
+$dark_blue:#3365AA;//2D3C53
+$zhang_blue:#1B6A81;
+$blue_grey:#4C5663;
+$grey:#666A6F;
+
+$yellow:#FCDF15;
+$dark_yellow:#FBC14C;
+
+$purple:#A493C7;
+$blue_purple:#6670C5;
+$pale_purple:#95A5E0;
+$dark_purple:#6856AD;
+$darker_purple:#3A2E4D;
+
+$orange:#E89B1E;
+$pale_orange:#E38E42;
+$pink:#CC675B;
+$dark_pink:#CC675B;
+$pale_pink:#DD7D7F;//
+
+$pale_red:#DFD5BD;//D36B67
+$red:#F6624A;//F6624A ,EE4E3D
+
+$coffee:#937342;
+$dark_coffee:#45362E;
+$light_coffee:#87766C;
+
+$pale_white:#f4f4f4;
+$body_bg:#ECEEEF;
+// ======================
+$light_border:rgb(240, 242, 244);
+$e_border:solid 1px #eee;
+$light_shadow:0px 1px 2px 0px rgba(0, 0, 0, 0.1);
+$dark_shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.3);
+$dark_font_color:#555;
+$nav_link_hover:$light_green;
+$nav_link_bg:$dark_green;
+// -----------------
+$screen-xs:                  480px;
+$screen-xs-min:              $screen-xs;
+$screen-phone:               $screen-xs-min;
+
+// Small screen / tablet
+// Note: Deprecated $screen-sm and $screen-tablet as of v3.0.1
+$screen-sm:                  768px;
+$screen-sm-min:              $screen-sm;
+$screen-tablet:              $screen-sm-min;
+
+// Medium screen / desktop
+// Note: Deprecated $screen-md and $screen-desktop as of v3.0.1
+$screen-md:                  992px;
+$screen-md-min:              $screen-md;
+$screen-desktop:             $screen-md-min;
+
+// Large screen / wide desktop
+// Note: Deprecated $screen-lg and $screen-lg-desktop as of v3.0.1
+$screen-lg:                  1200px;
+$screen-lg-min:              $screen-lg;
+$screen-lg-desktop:          $screen-lg-min;
+
+$screen-xlg:				1500px;
+// So media queries don't overlap when required, provide a maximum
+$screen-xs-max:              ($screen-sm-min - 1);
+$screen-sm-max:              ($screen-md-min - 1);
+$screen-md-max:              ($screen-lg-min - 1);
+
+// ------------------
+.light_green{ background-color:$light_green;}
+.bright_green{ background-color:$bright_green;}
+.green{ background-color:$green;}//#3BB262,#28AD60,#3BCA4C}
+.dark_green{ background-color:$dark_green;}
+.pale_green{ background-color:$pale_green;}
+
+.green_lime{ background-color:$green_lime;}//A1C765,#2DCC70}
+.lime{ background-color:$lime;}
+
+.pale_cyan{ background-color:$pale_cyan;}
+.cyan{ background-color:$cyan;}
+.dark_cyan{ background-color:$dark_cyan;}
+
+.blue{ background-color:$blue;}
+.pale_blue{ background-color:$pale_blue;}
+.dark_blue{ background-color:$dark_blue;}
+.darker_blue{ background-color:$darker_blue;}
+.zhang_blue{ background-color:$zhang_blue;}
+.grey{background-color: $grey}
+.blue_grey{background-color: $blue_grey}
+
+.yellow{ background-color:$yellow;}
+.dark_yellow{background-color: $dark_yellow}
+
+.purple{ background-color:$purple;}
+.pale_purple{background-color: $pale_purple;}
+.dark_purple{background-color: $dark_purple;}
+.darker_purple{background-color: $darker_purple;}
+.blue_purple{background-color: $blue_purple}
+
+.orange{ background-color:$orange;}
+.pale_orange{ background-color:$pale_orange;}
+
+.pale_pink{ background-color:$pale_pink;}
+.pink{ background-color:$pink;}
+.dark_pink{ background-color:$dark_pink;}
+
+.pale_red{ background-color:$pale_red;}
+.red{ background-color:$red;}
+
+.coffee{ background-color:$coffee;}
+.dark_coffee{background-color: $dark_coffee}
+.light_coffee{background-color: $light_coffee}
+
+.pale_white{ background-color:$pale_white;}

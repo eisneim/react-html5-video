@@ -1,0 +1,169 @@
+// Button variants
+// -------------------------
+// Easily pump out default styles, as well as :hover, :focus, :active,
+// and disabled options for all buttons
+@mixin button-variant($color, $background, $border) {
+  color: $color;
+  background-color: $background;
+  border-color: $border;
+  &:hover,
+  &:focus,
+  &:active,
+  &.active {
+    color: $color;
+    background-color:  darken($background ,8%);
+        border-color:  $border ;
+  }
+  .open & { &.dropdown-toggle {
+    color: $color;
+    background-color:  $background ;
+        border-color:  $border;
+  } }
+  &:active,
+  &.active {
+    background-image: none;
+  }
+  .open & { &.dropdown-toggle {
+    background-image: none;
+  } }
+  &.disabled,
+  &[disabled],
+  fieldset[disabled] & {
+    &,
+    &:hover,
+    &:focus,
+    &:active,
+    &.active {
+      background-color: $background;
+          border-color: $border;
+    }
+  }
+}
+
+@mixin ghost-button-variant($color,$border-color,$border-width:1px) {
+  color: $color;
+  display:inline-block;
+  background: none;
+  border-color: $border-color;
+  border-width: $border-width;
+  transition: background .3s ease;
+    &.btn-xlg{
+      border-width: 2px;
+    }
+
+  &:hover,
+  &:focus,
+  &:active,
+  &.active{
+    color: darken($color, 15%);
+    background-color: rgba(255, 255, 255, 0.3);
+    border-color: darken($border-color, 15%);
+  }
+  &:active,
+  &.active{
+    background-image: none;
+  }
+  &.disabled,
+  &[disabled],
+  fieldset[disabled] & {
+    &,
+    &:hover,
+    &:focus,
+    &:active,
+    &.active {
+      background-color: rgba(255, 255, 255, 0.2);
+          border-color: lighten($border-color, 5%);
+    }
+  }
+}
+
+// Button sizes
+// -------------------------
+@mixin button-size($padding-vertical, $padding-horizontal, $font-size, $line-height, $border-radius) {
+  font-weight: 400;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+  &:hover{
+    background-color: rgba(0,0,0,0.05);
+  }
+  
+  padding: $padding-vertical $padding-horizontal;
+  font-size: $font-size;
+  line-height: $line-height;
+  border-radius: $border-radius;
+  text-decoration: none;
+  color: #666;
+  display: inline-block;
+  // margin-left: 2px;
+  // margin-right: 2px;
+}
+// -----------
+// center vertically and/or horizontally an absolute positioned element
+@mixin center($xy:xy) {
+  @if $xy == xy {
+    left: 50%;
+    top: 50%;
+    bottom: auto;
+    right: auto;
+    transform:translateX(-50%) translateY(-50%);
+  }
+  @else if $xy == x {
+    left: 50%;
+    right: auto;
+    transform:translateX(-50%);
+  }
+  @else if $xy == y {
+    top: 50%;
+    bottom: auto;
+    transform:translateY(-50%);
+  }
+}
+
+// -------------- shadow depth
+@mixin makeCard($shadow:$shadow-depth1, $background:#fff, $radius:3px ) {
+  box-shadow: $shadow;
+  background-color: $background;
+  border-radius: $radius;
+}
+
+@mixin fit-parent(){
+  width: 100%;
+  height:100%;
+  position: absolute;
+  top:0;
+  left:0;
+}
+
+@mixin psudo-triangle($size:10px,$direction:left,$color:#fff){
+  content:"";
+  display:block;
+  position:absolute;
+  width:0;
+  height:0;
+  @if $direction == left {
+    border-top:solid $size transparent;
+    border-bottom:solid $size transparent;
+    border-left:solid $size $color;
+    border-right:solid $size transparent;
+  }@else if $direction == right {
+    border-top:solid $size transparent;
+    border-bottom:solid $size transparent;
+    border-left:solid $size transparent;
+    border-right:solid $size $color;
+  }@else if $direction == top {
+    border-top:solid $size $color;
+    border-bottom:solid $size transparent;
+    border-left:solid $size transparent;
+    border-right:solid $size transparent;
+  }@else {
+    border-top:solid $size transparent;
+    border-bottom:solid $size $color;
+    border-left:solid $size transparent;
+    border-right:solid $size transparent;
+  }
+}

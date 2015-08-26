@@ -1,0 +1,65 @@
+@keyframes zx-bounce-in {
+	0% {
+		transform:scale(0);
+	}
+
+	60% {
+		transform:scale(1.2);
+	}
+
+	100% {
+		transform:scale(1);
+	}
+}
+.zx-show-up{
+	animation: zx-show-up 0.3s ease-out;
+	animation-fill-mode: forwards;
+}
+@keyframes zx-show-up {
+	0% {
+		transform: translate3d(0,60px,0) scale(0.95);
+		opacity: 0;
+	}
+
+	100% {
+		transform:translate3d(0,0,0) scale(1);
+		opacity:1;
+	}
+}
+.zx-fade-in{
+	animation: zx-fade-in 0.3s ease-out;
+	animation-fill-mode: forwards;
+}
+@keyframes zx-fade-in {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+@keyframes zx-fade-out {
+	0% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
+}
+@keyframes zx-rotate {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+// --------------
+@keyframes zx-breath{
+	0% {
+		transform:scale(0.5);
+	}
+	100% {
+		transform:scale(1);
+	}
+}
