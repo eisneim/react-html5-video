@@ -94,17 +94,19 @@ class Video extends React.Component {
 					{  this.$getSource( sources) }
 					{ subtitles && subtitles.length>0? this.$getSubtitleTracks(subtitles) : "" }
 				</video>
-				<div className="r5-overlay" onClick={this._togglePlay}></div>
+				<div className="r5-overlay" onClick={this._togglePlay}>
+					{!this.$video? this.icons.playCircle:""}
+				</div>
 				<div className={controlsClass}>
 					<div className="r5-seekbar-wraper">
-						<div className="r5-seekbar"></div>
+						<div className="r5-seekbar" style={{width:"10%"}}></div>
 					</div>
-					<div>
+					<div className="r5-panel">
 						<button className="r5-play" onClick={this._togglePlay}>
 							{ this.state.isPlaying ? this.icons.pause : this.icons.play }
 						</button>
 						<div className="r5-volume">
-							{ this.state.isMuted? this.icons.mute : this.icons.volume }
+							<button>{ this.state.isMuted? this.icons.mute : this.icons.volume }</button>
 						</div>
 						<span	className="r5-timecode"></span>
 						<div className="r5-pull-right">
@@ -124,48 +126,48 @@ class Video extends React.Component {
 			seekProgress: 0,// how much has played
 			volume: this.props.volume,
 		}
-
+		var fill = this.props.controlPanelStyle == "overlay"?"#ffffff":"#3FBA97";
 		this.icons = {}
 		this.icons.play = (
 			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-		    <path d="M8 5v14l11-7z"/>
+		    <path d="M8 5v14l11-7z" fill={fill}/>
 		    <path d="M0 0h24v24H0z" fill="none"/>
 			</svg>
 		)
 		this.icons.pause = (
 			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-			 	<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+			 	<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" fill={fill}/>
 			  <path d="M0 0h24v24H0z" fill="none"/>
 			</svg>
 		)
 		this.icons.playCircle = (
-			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" >
 		    <path d="M0 0h24v24H0z" fill="none"/>
-		    <path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+		    <path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" fill={fill}/>
 			</svg>
 		)
 		this.icons.volume=(
 			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-			  <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+			  <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" fill={fill}/>
 			  <path d="M0 0h24v24H0z" fill="none"/>
 			</svg>
 		)
 		this.icons.mute = (
 			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-			  <path d="M7 9v6h4l5 5V4l-5 5H7z"/>
+			  <path d="M7 9v6h4l5 5V4l-5 5H7z" fill={fill}/>
 			  <path d="M0 0h24v24H0z" fill="none"/>
 			</svg>
 		)
 		this.icons.subtitles = (
 			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
 			    <path d="M0 0h24v24H0z" fill="none"/>
-			    <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM4 12h4v2H4v-2zm10 6H4v-2h10v2zm6 0h-4v-2h4v2zm0-4H10v-2h10v2z"/>
+			    <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM4 12h4v2H4v-2zm10 6H4v-2h10v2zm6 0h-4v-2h4v2zm0-4H10v-2h10v2z" fill={fill}/>
 			</svg>
 		)
 		this.icons.fullscreen = (
 			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
 			  <path d="M0 0h24v24H0z" fill="none"/>
-			  <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+			  <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" fill={fill}/>
 			</svg>
 		)
 	}
