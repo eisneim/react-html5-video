@@ -1,5 +1,7 @@
 import React from "react"
-import path from "path";
+import path from "path"
+import { secondToString } from "./utils/dateTime.js"
+
 window.r5Debug = require("debug");
 var dd = window.r5Debug("r5");
 
@@ -10,13 +12,13 @@ class Video extends React.Component {
 		super()
 		// store all public handler here, and return this api object to parent component;
 		this.api = {}; 
-		var pubHandlers = ["togglePlay"];
+		var pubHandlers = ["togglePlay","setTime"];
 		// save public handlers to api object
 		pubHandlers.forEach( name => {
 			this["_"+name] = this.api[name] = this["_"+name].bind(this)
 		});
 		// manually bind all handlers
-		var handlers = ["metaDataLoaded","timeupdate"];
+		var handlers = ["metaDataLoaded","timeupdate","durationchange","progress"];
 		handlers.forEach( name => this["_"+name] = this["_"+name].bind(this) )
 		
 	}
@@ -29,7 +31,20 @@ class Video extends React.Component {
 		// set $wrapers width equal to video width, if width props is not set;
 		this.$setWraperDimension(this.$video);
 		$video.addEventListener("loadedmetadata", this._metaDataLoaded )
-		$video.addEventListener("timeupdate", this._timeupdate )
+		// this update interval gap is too big make progressbar not snapy
+		// $video.addEventListener("timeupdate", this._timeupdate )
+		$video.addEventListener("progress", this._progress )
+		
+
+		if( this.props.autoPlay && !this.seekbarUpdateTimer ) this.seekbarUpdateInterval();
+	}
+	_setTime( percent ){
+		if(percent>100) return;
+		var time = percent * this.$video.duration / 100
+		dd("change time", time )
+		this.$video.currentTime = parseInt(time,10);
+		dd( this.$video.currentTime )
+		this.setState({seekProgress: percent });
 	}
 	// update seek bar width;
 	_timeupdate(e){
@@ -40,6 +55,17 @@ class Video extends React.Component {
 			// $this.video.pause();
 		}
 		this.setState(newState);
+	}
+	_durationchange(){
+
+	}
+	_progress(e){
+		var buf = this.$video.buffered;
+		var total = 0;
+		for( let ii = 0; ii<buf.length; ii++ ){
+			total += buf.end(ii) - buf.start(ii);
+		}
+		this.setState({loadedProgress: total / this.$video.duration * 100 })
 	}
 	/**
 	 * after metaData Loaded we can get video dimentions and set width,height of video wraper;
@@ -52,8 +78,13 @@ class Video extends React.Component {
 		// calculate width of seek bar and progress;
 		this.$seekbarWraper = React.findDOMNode( this.refs.seekbarWraper );
 	}
+	seekbarUpdateInterval(){
+		this.seekbarUpdateTimer = setInterval( this._timeupdate, 80);
+	}
 	_togglePlay(){
 		dd("toggle play")
+		if( !this.seekbarUpdateTimer ) this.seekbarUpdateInterval();
+
 		if(!this.state.isPlaying){
 			if(this.$video.currentTime >= this.$video.duration ) this.$video.currentTime = 0;
 			this.$video.play();
@@ -86,8 +117,7 @@ class Video extends React.Component {
 		return $sources;
 	}
 	render(){
-		console.log("render is called ")
-		const { subtitles, loop, autoPlay, poster, sources, controlPanelStyle, autoHideControls } = this.props
+		const { subtitles, loop, autoPlay, poster,preload, sources, controlPanelStyle, autoHideControls } = this.props
 		//html5 video options
 		var options = { loop, autoPlay, poster };
 		var wraperStyle = {};
@@ -114,6 +144,9 @@ class Video extends React.Component {
 					<div className="r5-seekbar-wraper" ref="seekbarWraper">
 						<div className="r5-seekbar-loaded" ref="seekbar" style={{width:this.state.loadedProgress+"%"}}></div>
 						<div className="r5-seekbar" ref="loadedbar" style={{width:this.state.seekProgress+"%"}}></div>
+						<input type="range" min="0.0" max="100.0" step="0.5" 
+							value={this.state.seekProgress}
+							onChange={e=>this._setTime(e.target.value)} />
 					</div>
 					<div className="r5-panel">
 						<button className="r5-play" onClick={this._togglePlay}>
@@ -122,7 +155,7 @@ class Video extends React.Component {
 						<div className="r5-volume">
 							<button>{ this.state.isMuted? this.icons.mute : this.icons.volume }</button>
 						</div>
-						<span	className="r5-timecode"></span>
+						<span	className="r5-timecode">{this.state.currentTime+"/"+this.state.duration}</span>
 						<div className="r5-pull-right">
 							<button className="r5-subtitle">{this.icons.subtitles}</button>
 							<button className="r5-fullscreen">{this.icons.fullscreen}</button>
@@ -136,6 +169,8 @@ class Video extends React.Component {
 		this.state = {
 			isPlaying: this.props.autoPlay?true: false,
 			isMuted: false,
+			currentTime: "00:00", 
+			duration: "00:00",
 			loadedProgress: 0, 
 			seekProgress: 0,// how much has played
 			volume: this.props.volume,
@@ -185,6 +220,9 @@ class Video extends React.Component {
 			</svg>
 		)
 	}
+	componentWillUnmount(){
+		if(this.seekbarUpdateTimer) clearInterval( this.seekbarUpdateTimer );
+	}
 }
 
 Video.propTypes = {
@@ -198,6 +236,7 @@ Video.propTypes = {
 	controls: 					React.PropTypes.bool,
 	autoHideControls: 	React.PropTypes.bool,
 	controlPanelStyle: 	React.PropTypes.oneOf(["overlay","fixed"]), // overlay, fixed
+	preload: 						React.PropTypes.oneOf(["auto","none","metadata"]), 
 	loop: 							React.PropTypes.bool,
 	mute: 							React.PropTypes.bool,
 	poster: 						React.PropTypes.string,
@@ -216,7 +255,7 @@ Video.defaultProps = {
 	volume: 				1.0,
 	mute: 					false,
 	controlPanelStyle: "overlay",
-
+	preload: 				"auto",
 }
 
 export default Video

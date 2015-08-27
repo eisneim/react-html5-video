@@ -61,10 +61,20 @@ $seekbarColor: #44FFB4;  // #3FBA97;
 		}
 	}
 	.r5-pull-right{ float: right;}
+
+
+
 	.r5-seekbar-wraper{
 		height: $seekbarHeight;
 		margin-bottom: 5px;
 		position:relative;
+		input[type="range"]{
+			width:  100%;
+			position: absolute;
+			top:-5px;
+			opacity:0;
+			cursor:pointer;
+		}
 	}
 	.r5-seekbar,.r5-seekbar-loaded{
 		position:absolute;
@@ -91,7 +101,7 @@ $seekbarColor: #44FFB4;  // #3FBA97;
 		}
 		.r5-seekbar{
 			background-color: $seekbarColor;
-			transition: width 0.3s;
+			transition: width 0.1s;
 		}
 		.r5-seekbar-loaded{
 			background-color: rgba(255,255,255,0.5);
