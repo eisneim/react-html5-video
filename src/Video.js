@@ -1,6 +1,6 @@
 import React from "react"
 import path from "path"
-import { secondToString } from "./utils/dateTime.js"
+import { formatTime } from "./utils/dateTime.js"
 
 window.r5Debug = require("debug");
 var dd = window.r5Debug("r5");
@@ -12,7 +12,7 @@ class Video extends React.Component {
 		super()
 		// store all public handler here, and return this api object to parent component;
 		this.api = {}; 
-		var pubHandlers = ["togglePlay","setTime"];
+		var pubHandlers = ["togglePlay","setTime","fullscreen","volume"];
 		// save public handlers to api object
 		pubHandlers.forEach( name => {
 			this["_"+name] = this.api[name] = this["_"+name].bind(this)
@@ -43,7 +43,6 @@ window.$video = $video;
 		if(percent>100) return;
 		var time = percent * this.$video.duration / 100
 		dd("change time", time )
-		dd("this.$video.seekable.end(0) :",this.$video.seekable.end(0), this.$video.seekable.length )
 		if(this.$video.fastSeek ){
 			this.$video.fastSeek(time)
 		}else{
@@ -54,7 +53,10 @@ window.$video = $video;
 	// update seek bar width;
 	_timeupdate(e){
 		var percent = this.$video.currentTime / this.$video.duration * 100;
-		var newState = {seekProgress: percent };
+		var newState = {
+			seekProgress: percent, 
+			currentTime: formatTime(this.$video.currentTime) 
+		}
 		if(this.$video.currentTime >= this.$video.duration ) {
 			newState.isPlaying = false;
 		}
@@ -83,6 +85,7 @@ window.$video = $video;
 		this.$setWraperDimension(this.$video);
 		// calculate width of seek bar and progress;
 		this.$seekbarWraper = React.findDOMNode( this.refs.seekbarWraper );
+		this.setState({duration: formatTime(this.$video.duration) })
 	}
 	seekbarUpdateInterval(){
 		this.seekbarUpdateTimer = setInterval( this._timeupdate, 80);
@@ -100,6 +103,21 @@ window.$video = $video;
 			this.setState({isPlaying: false})
 		}
 	}
+	_fullscreen(e){
+		var apis = ["requestFullScreen","mozRequestFullScreen","webkitRequestFullscreen","msRequestFullscreen"];
+		for(var ii=0; ii<apis.length; ii++){
+			if(this.$video[apis[ii]]) return this.$video[apis[ii]]();
+		}
+	}
+	_volume( val ){
+		if( val <= 0) val = 0;
+		this.$video.volume = val;
+		var state = {
+			volume: val,
+			isMuted: val<= 0.05? true: false, 
+		};
+		this.setState(state);
+	}
 	$setWraperDimension( $video ){
 		if( this.props.width ) return;
 		dd("should set setWraperDimension");
@@ -108,6 +126,7 @@ window.$video = $video;
 			this.$wraper.style.height = ($video.videoHeight || $video.clientHeight) +"px"
 		}
 	}
+	// generate subtitle tracks: <track >
 	$getSubtitleTracks( subtitles ){
 		return []
 	}
@@ -159,12 +178,16 @@ window.$video = $video;
 							{ this.state.isPlaying ? this.icons.pause : this.icons.play }
 						</button>
 						<div className="r5-volume">
-							<button>{ this.state.isMuted? this.icons.mute : this.icons.volume }</button>
+							<button>{ this.state.isMuted? this.icons.mute : (this.state.volume>0.5?this.icons.volumeUp: this.icons.volumeDown) }</button>
+							<div className="r5-volume-inner" style={{width:"80px"}}>
+								<div className="r5-volume-bar" style={{width: (this.state.volume*100)+"%"}}></div>
+								<input type="range" min="0" max="1" step="0.05" value={this.state.volume} onChange={e=>this._volume(e.target.value)}/>
+							</div>
 						</div>
-						<span	className="r5-timecode">{this.state.currentTime+"/"+this.state.duration}</span>
+						<span	className="r5-timecode">{this.state.currentTime+" / "+this.state.duration}</span>
 						<div className="r5-pull-right">
 							<button className="r5-subtitle">{this.icons.subtitles}</button>
-							<button className="r5-fullscreen">{this.icons.fullscreen}</button>
+							<button className="r5-fullscreen" onClick={this._fullscreen}>{this.icons.fullscreen}</button>
 						</div>
 					</div>
 				</div>
@@ -201,10 +224,16 @@ window.$video = $video;
 		    <path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" fill={fill}/>
 			</svg>
 		)
-		this.icons.volume=(
+		this.icons.volumeUp=(
 			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
 			  <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" fill={fill}/>
 			  <path d="M0 0h24v24H0z" fill="none"/>
+			</svg>
+		)
+		this.icons.volumeDown=(
+			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+			  <path d="M18.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM5 9v6h4l5 5V4L9 9H5z" fill={fill}/>
+			 	<path d="M0 0h24v24H0z" fill="none"/>
 			</svg>
 		)
 		this.icons.mute = (
