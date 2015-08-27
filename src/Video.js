@@ -28,6 +28,7 @@ class Video extends React.Component {
 		 */
 		this.$wraper = React.findDOMNode(this);
 		var $video = this.$video = React.findDOMNode( this.refs.video )
+window.$video = $video;
 		// set $wrapers width equal to video width, if width props is not set;
 		this.$setWraperDimension(this.$video);
 		$video.addEventListener("loadedmetadata", this._metaDataLoaded )
@@ -42,8 +43,12 @@ class Video extends React.Component {
 		if(percent>100) return;
 		var time = percent * this.$video.duration / 100
 		dd("change time", time )
-		this.$video.currentTime = parseInt(time,10);
-		dd( this.$video.currentTime )
+		dd("this.$video.seekable.end(0) :",this.$video.seekable.end(0), this.$video.seekable.length )
+		if(this.$video.fastSeek ){
+			this.$video.fastSeek(time)
+		}else{
+			this.$video.currentTime = time;
+		}
 		this.setState({seekProgress: percent });
 	}
 	// update seek bar width;
@@ -52,13 +57,13 @@ class Video extends React.Component {
 		var newState = {seekProgress: percent };
 		if(this.$video.currentTime >= this.$video.duration ) {
 			newState.isPlaying = false;
-			// $this.video.pause();
 		}
 		this.setState(newState);
 	}
 	_durationchange(){
 
 	}
+	// loading progress bar
 	_progress(e){
 		var buf = this.$video.buffered;
 		var total = 0;
@@ -71,6 +76,7 @@ class Video extends React.Component {
 	 * after metaData Loaded we can get video dimentions and set width,height of video wraper;
 	 */
 	_metaDataLoaded(e){
+		dd("metadata loaded")
 		if(this.props.metaDataLoaded && typeof this.props.metaDataLoaded == "function" ){
 			this.props.metaDataLoaded( this.api );
 		}
@@ -119,7 +125,7 @@ class Video extends React.Component {
 	render(){
 		const { subtitles, loop, autoPlay, poster,preload, sources, controlPanelStyle, autoHideControls } = this.props
 		//html5 video options
-		var options = { loop, autoPlay, poster };
+		var options = { loop, autoPlay, poster,preload };
 		var wraperStyle = {};
 		if( this.props.width ){
 			options.width = this.props.width 
