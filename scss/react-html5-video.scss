@@ -66,7 +66,9 @@ $seekbarColor: #44FFB4;  // #3FBA97;
 		margin-bottom: 5px;
 		position:relative;
 	}
-	.r5-seekbar{
+	.r5-seekbar,.r5-seekbar-loaded{
+		position:absolute;
+		top:0;left:0;
 		height: $seekbarHeight;
 	}
 	.r5-volume{
@@ -77,18 +79,31 @@ $seekbarColor: #44FFB4;  // #3FBA97;
 	.r5-controls.r5-controls--overlay{
 		color: #fff;
 		position:absolute;
-		bottom:0;
+		bottom: 0;
 		left:0;
 		background:linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.5)) 0 0px repeat-x;
+		&.r5-auto-hide{
+			opacity:0;
+			transition: opacity 0.3s ease-out;
+		}
 		.r5-seekbar-wraper{
-			background-color: rgba(255,255,255,0.4);
+			background-color: rgba(255,255,255,0.3);
 		}
 		.r5-seekbar{
 			background-color: $seekbarColor;
+			transition: width 0.3s;
+		}
+		.r5-seekbar-loaded{
+			background-color: rgba(255,255,255,0.5);
 		}
 	}
 	// --------------------------------------
 	.r5-controls.r5-controls--fixed{
 		
 	}
+}
+
+.r5-wraper:hover .r5-controls--overlay.r5-auto-hide{
+	opacity: 1;
+	transition: opacity 0.3s ease-in;
 }

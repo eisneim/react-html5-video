@@ -16,7 +16,7 @@ class Video extends React.Component {
 			this["_"+name] = this.api[name] = this["_"+name].bind(this)
 		});
 		// manually bind all handlers
-		var handlers = ["metaDataLoaded"];
+		var handlers = ["metaDataLoaded","timeupdate"];
 		handlers.forEach( name => this["_"+name] = this["_"+name].bind(this) )
 		
 	}
@@ -29,7 +29,17 @@ class Video extends React.Component {
 		// set $wrapers width equal to video width, if width props is not set;
 		this.$setWraperDimension(this.$video);
 		$video.addEventListener("loadedmetadata", this._metaDataLoaded )
-
+		$video.addEventListener("timeupdate", this._timeupdate )
+	}
+	// update seek bar width;
+	_timeupdate(e){
+		var percent = this.$video.currentTime / this.$video.duration * 100;
+		var newState = {seekProgress: percent };
+		if(this.$video.currentTime >= this.$video.duration ) {
+			newState.isPlaying = false;
+			// $this.video.pause();
+		}
+		this.setState(newState);
 	}
 	/**
 	 * after metaData Loaded we can get video dimentions and set width,height of video wraper;
@@ -39,10 +49,13 @@ class Video extends React.Component {
 			this.props.metaDataLoaded( this.api );
 		}
 		this.$setWraperDimension(this.$video);
+		// calculate width of seek bar and progress;
+		this.$seekbarWraper = React.findDOMNode( this.refs.seekbarWraper );
 	}
 	_togglePlay(){
 		dd("toggle play")
 		if(!this.state.isPlaying){
+			if(this.$video.currentTime >= this.$video.duration ) this.$video.currentTime = 0;
 			this.$video.play();
 			this.setState({isPlaying: true})
 		}else{
@@ -74,7 +87,7 @@ class Video extends React.Component {
 	}
 	render(){
 		console.log("render is called ")
-		const { subtitles, loop, autoPlay, poster, sources, controlPanelStyle } = this.props
+		const { subtitles, loop, autoPlay, poster, sources, controlPanelStyle, autoHideControls } = this.props
 		//html5 video options
 		var options = { loop, autoPlay, poster };
 		var wraperStyle = {};
@@ -85,7 +98,7 @@ class Video extends React.Component {
 			wraperStyle.height = this.props.height+"px";
 		}
 
-		var controlsClass = `r5-controls r5-controls--${controlPanelStyle}`
+		var controlsClass = `r5-controls r5-controls--${controlPanelStyle} ${autoHideControls?"r5-auto-hide":""}`
 		
 
 		return (
@@ -98,8 +111,9 @@ class Video extends React.Component {
 					{!this.$video? this.icons.playCircle:""}
 				</div>
 				<div className={controlsClass}>
-					<div className="r5-seekbar-wraper">
-						<div className="r5-seekbar" style={{width:"10%"}}></div>
+					<div className="r5-seekbar-wraper" ref="seekbarWraper">
+						<div className="r5-seekbar-loaded" ref="seekbar" style={{width:this.state.loadedProgress+"%"}}></div>
+						<div className="r5-seekbar" ref="loadedbar" style={{width:this.state.seekProgress+"%"}}></div>
 					</div>
 					<div className="r5-panel">
 						<button className="r5-play" onClick={this._togglePlay}>
@@ -182,6 +196,7 @@ Video.propTypes = {
 	subtitles: 					React.PropTypes.array, // [{src:"foo.vtt", label:"English",srclan:"en" }]
 	autoPlay: 					React.PropTypes.bool,
 	controls: 					React.PropTypes.bool,
+	autoHideControls: 	React.PropTypes.bool,
 	controlPanelStyle: 	React.PropTypes.oneOf(["overlay","fixed"]), // overlay, fixed
 	loop: 							React.PropTypes.bool,
 	mute: 							React.PropTypes.bool,
@@ -197,6 +212,7 @@ Video.defaultProps = {
 	autoPlay:  			false,
 	loop: 					false,
 	controls: 			true,
+	autoHideControls:false,
 	volume: 				1.0,
 	mute: 					false,
 	controlPanelStyle: "overlay",
