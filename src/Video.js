@@ -165,6 +165,7 @@ window.$video = $video;
 				<div className="r5-overlay" onClick={this._togglePlay}>
 					{!this.$video? this.icons.playCircle:""}
 				</div>
+				<div className="r5-content">{this.props.children}</div>
 				<div className={controlsClass}>
 					<div className="r5-seekbar-wraper" ref="seekbarWraper">
 						<div className="r5-seekbar-loaded" ref="seekbar" style={{width:this.state.loadedProgress+"%"}}></div>
@@ -178,7 +179,7 @@ window.$video = $video;
 							{ this.state.isPlaying ? this.icons.pause : this.icons.play }
 						</button>
 						<div className="r5-volume">
-							<button>{ this.state.isMuted? this.icons.mute : (this.state.volume>0.5?this.icons.volumeUp: this.icons.volumeDown) }</button>
+							<button>{ this.state.isMuted? this.icons.mute : (this.state.volume>0.7?this.icons.volumeUp: this.icons.volumeDown) }</button>
 							<div className="r5-volume-inner" style={{width:"80px"}}>
 								<div className="r5-volume-bar" style={{width: (this.state.volume*100)+"%"}}></div>
 								<input type="range" min="0" max="1" step="0.05" value={this.state.volume} onChange={e=>this._volume(e.target.value)}/>

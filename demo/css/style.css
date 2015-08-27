@@ -103,6 +103,12 @@ header{
 header .r5-wraper{
 	margin:10px auto 30px;
 }
+.r5-content{
+	text-align: left;
+	padding:0 15px;
+	color: #fff;
+}
+.r5-content a{ color: #fff;}
 
 
 

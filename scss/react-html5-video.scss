@@ -16,6 +16,11 @@ $seekbarColor: #44FFB4;  // #3FBA97;
 	min-width: 200px;
 	position: relative;
 	overflow: hidden;
+	.r5-content{
+		position:absolute;
+		width: 100%;
+		top:0; left: 0;
+	}
 	.r5-overlay{
 		width: 100%;
 		height: 100%;
