@@ -1,5 +1,20 @@
-import React from "react/addons";
+import React from "react";
 import Video from "../../src/Video.js";
+
+class Code extends React.Component{
+	componentDidMount(){
+		var node = React.findDOMNode(this);
+		Prism.highlightElement( node,false,function(){});
+	}
+	render(){
+		var lan = `language-${ this.props.lan || "markup" }`
+		return(
+			<pre>
+				<code className={lan}>{this.props.children}</code>
+			</pre>
+		)
+	}
+}
 
 class App extends React.Component {
 	constructor(){
@@ -47,10 +62,15 @@ class App extends React.Component {
 							<h3 className="pull-right"><a href="http://glexe.com" target="_blank">LOGO</a></h3>
 							<p>Any HTML content</p>
 						</Video>
+						<ul className="gh-btns">
+							<li><iframe src="https://ghbtns.com/github-btn.html?user=eisneim&repo=react-html5-video&type=star&count=true" frameborder="0" scrolling="0" height="20px"></iframe></li>
+							<li><iframe src="https://ghbtns.com/github-btn.html?user=eisneim&repo=react-html5-video&type=fork&count=true" frameborder="0" scrolling="0"  height="20px"></iframe></li>
+							<li><iframe src="https://ghbtns.com/github-btn.html?user=eisneim&type=follow&count=true" frameborder="0" scrolling="0" width="150px"  height="20px"></iframe></li>
+						</ul>
 					</div>
 				</header>
-				<section className="container clearfix">
-					<p>external controls are also supported!</p>
+				<section className="container clearfix main">
+					<h3>external controls are also supported!</h3>
 					<div>
 						<button onClick={e=>this._togglePlay()}> play / pause </button>
 						<button onClick={e=>this._volume(0.2)}> volume + </button>
@@ -59,6 +79,32 @@ class App extends React.Component {
 						<button onClick={e=>this._fullscreen()}> fullScreen </button>
 					</div>
 
+					<h2>Quick start</h2>
+					<Code lan="javascript">
+						npm install --save react-html5-video
+					</Code>
+					<p>load in the stylesheet,(in order to make it easier for developers to customize video player's style, css is not written in js)</p>
+					<Code lan="markup">
+					{`<link rel="stylesheet" type="text/css" href="node_modules/react-html5-video/lib/react-html5-video.css">`}
+					</Code>
+					<Code lan="javascript">{
+`import React from "react";
+import Video from "react-html5-video";
+
+class MyAewsomeApp extends React.Component{
+	render(){
+		var sources = [ "./video/video.mp4","./video/video.webm","./video/video.ogv" ]
+		return(
+			<Video sources={sources} poster="./video/poster.png" >
+				<h3 className="video-logo pull-right"><a href="http://glexe.com" target="_blank">LOGO</a></h3>
+				<p>Any HTML content</p>
+			</Video>
+		)
+	}
+}
+
+`
+					}</Code>
 				</section>
 			</div>
 		)

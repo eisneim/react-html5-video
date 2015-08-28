@@ -110,7 +110,7 @@ header .r5-wraper{
 }
 .r5-content a{ color: #fff;}
 
-button{
+.main button{
 	background: none;
 	color: #369588;
 	border:solid 1px #369588;
@@ -119,8 +119,21 @@ button{
 	border-radius: 3px;
 	outline: none;
 }
-button:hover{
+.main button:hover{
 	background-color: rgba(240,240,240,0.8);
 }
-
+.col-6{
+	width: 50%;
+	float: left;
+}
+ul.gh-btns{
+	list-style: none;
+}
+.gh-btns li{
+	display: inline-block;
+	width: 150px;
+}
+.gh-btns iframe body,.gh-btns iframe{
+	border:none;
+}
 
