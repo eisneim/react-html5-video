@@ -27,7 +27,7 @@ class Video extends React.Component {
 		 * register some video event listener here;
 		 */
 		this.$wraper = React.findDOMNode(this);
-		var $video = this.$video = React.findDOMNode( this.refs.video )
+		var $video = this.$video = this.api.$video = React.findDOMNode( this.refs.video )
 window.$video = $video;
 		// set $wrapers width equal to video width, if width props is not set;
 		this.$setWraperDimension(this.$video);
@@ -39,9 +39,25 @@ window.$video = $video;
 
 		if( this.props.autoPlay && !this.seekbarUpdateTimer ) this.seekbarUpdateInterval();
 	}
-	_setTime( percent ){
-		if(percent>100) return;
-		var time = percent * this.$video.duration / 100
+	/**
+	 * after metaData Loaded we can get video dimentions and set width,height of video wraper;
+	 */
+	_metaDataLoaded(e){
+		dd("metadata loaded")
+		if(this.props.metaDataLoaded && typeof this.props.metaDataLoaded == "function" ){
+			this.props.metaDataLoaded( this.api );
+		}
+		this.$setWraperDimension(this.$video);
+		// calculate width of seek bar and progress;
+		this.$seekbarWraper = React.findDOMNode( this.refs.seekbarWraper );
+		this.setState({duration: formatTime(this.$video.duration) })
+	}
+	seekbarUpdateInterval(){
+		this.seekbarUpdateTimer = setInterval( this._timeupdate, 80);
+	}
+	_setTime( percent, isPercent ){
+		if( isPercent && percent>100) return;
+		var time = isPercent? percent * this.$video.duration / 100 : percent;
 		dd("change time", time )
 		if(this.$video.fastSeek ){
 			this.$video.fastSeek(time)
@@ -74,22 +90,6 @@ window.$video = $video;
 		}
 		this.setState({loadedProgress: total / this.$video.duration * 100 })
 	}
-	/**
-	 * after metaData Loaded we can get video dimentions and set width,height of video wraper;
-	 */
-	_metaDataLoaded(e){
-		dd("metadata loaded")
-		if(this.props.metaDataLoaded && typeof this.props.metaDataLoaded == "function" ){
-			this.props.metaDataLoaded( this.api );
-		}
-		this.$setWraperDimension(this.$video);
-		// calculate width of seek bar and progress;
-		this.$seekbarWraper = React.findDOMNode( this.refs.seekbarWraper );
-		this.setState({duration: formatTime(this.$video.duration) })
-	}
-	seekbarUpdateInterval(){
-		this.seekbarUpdateTimer = setInterval( this._timeupdate, 80);
-	}
 	_togglePlay(){
 		dd("toggle play")
 		if( !this.seekbarUpdateTimer ) this.seekbarUpdateInterval();
@@ -111,6 +111,7 @@ window.$video = $video;
 	}
 	_volume( val ){
 		if( val <= 0) val = 0;
+		if(val >1) val = 1;
 		this.$video.volume = val;
 		var state = {
 			volume: val,
@@ -163,7 +164,7 @@ window.$video = $video;
 					{ subtitles && subtitles.length>0? this.$getSubtitleTracks(subtitles) : "" }
 				</video>
 				<div className="r5-overlay" onClick={this._togglePlay}>
-					{!this.$video? this.icons.playCircle:""}
+					{!this.$video || this.$video.currentTime<=0? this.icons.playCircle:""}
 				</div>
 				<div className="r5-content">{this.props.children}</div>
 				<div className={controlsClass}>
@@ -172,7 +173,7 @@ window.$video = $video;
 						<div className="r5-seekbar" ref="loadedbar" style={{width:this.state.seekProgress+"%"}}></div>
 						<input type="range" min="0.0" max="100.0" step="0.5" 
 							value={this.state.seekProgress}
-							onChange={e=>this._setTime(e.target.value)} />
+							onChange={e=>this._setTime(e.target.value,true)} />
 					</div>
 					<div className="r5-panel">
 						<button className="r5-play" onClick={this._togglePlay}>
@@ -287,7 +288,7 @@ Video.defaultProps = {
 	autoPlay:  			false,
 	loop: 					false,
 	controls: 			true,
-	autoHideControls:false,
+	autoHideControls:true,
 	volume: 				1.0,
 	mute: 					false,
 	controlPanelStyle: "overlay",
