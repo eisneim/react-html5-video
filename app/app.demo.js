@@ -44,8 +44,16 @@ class App extends React.Component {
 		this.api.setTime(second )
 	}
 	render(){
-		var sources = [
-			"./video/video.mp4","./video/video.webm","./video/video.ogv"
+		var sources = ["./video/video.mp4","./video/video.webm","./video/video.ogv"]
+		var subtitles = [
+			{
+				src:"video/captions_en.vtt",
+				lang:"en",label:"English"
+			},
+			{
+				src:"video/captions_zh.vtt",
+				lang:"zh",label:"中文"
+			},
 		]
 
 		return (
@@ -56,6 +64,7 @@ class App extends React.Component {
 						<h1>React-html5-video</h1>
 						<Video 
 							sources={sources} 
+							subtitles={subtitles}
 							poster="./video/poster.png" 
 							metaDataLoaded={this.getApi}
 						>
@@ -63,9 +72,9 @@ class App extends React.Component {
 							<p>Any HTML content</p>
 						</Video>
 						<ul className="gh-btns">
-							<li><iframe src="https://ghbtns.com/github-btn.html?user=eisneim&repo=react-html5-video&type=star&count=true" frameborder="0" scrolling="0" height="20px"></iframe></li>
-							<li><iframe src="https://ghbtns.com/github-btn.html?user=eisneim&repo=react-html5-video&type=fork&count=true" frameborder="0" scrolling="0"  height="20px"></iframe></li>
-							<li><iframe src="https://ghbtns.com/github-btn.html?user=eisneim&type=follow&count=true" frameborder="0" scrolling="0" width="150px"  height="20px"></iframe></li>
+							<li><iframe src="https://ghbtns.com/github-btn.html?user=eisneim&repo=react-html5-video&type=star&count=true" frameBorder="0" scrolling="0" height="20px"></iframe></li>
+							<li><iframe src="https://ghbtns.com/github-btn.html?user=eisneim&repo=react-html5-video&type=fork&count=true" frameBorder="0" scrolling="0"  height="20px"></iframe></li>
+							<li><iframe src="https://ghbtns.com/github-btn.html?user=eisneim&type=follow&count=true" frameBorder="0" scrolling="0" width="150px"  height="20px"></iframe></li>
 						</ul>
 					</div>
 				</header>

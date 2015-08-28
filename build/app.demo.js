@@ -104,6 +104,13 @@ var App = (function (_React$Component2) {
 			var _this = this;
 
 			var sources = ["./video/video.mp4", "./video/video.webm", "./video/video.ogv"];
+			var subtitles = [{
+				src: "video/captions_en.vtt",
+				lang: "en", label: "English"
+			}, {
+				src: "video/captions_zh.vtt",
+				lang: "zh", label: "中文"
+			}];
 
 			return _react2["default"].createElement(
 				"div",
@@ -124,6 +131,7 @@ var App = (function (_React$Component2) {
 							_srcVideoJs2["default"],
 							{
 								sources: sources,
+								subtitles: subtitles,
 								poster: "./video/poster.png",
 								metaDataLoaded: this.getApi
 							},
@@ -148,17 +156,17 @@ var App = (function (_React$Component2) {
 							_react2["default"].createElement(
 								"li",
 								null,
-								_react2["default"].createElement("iframe", { src: "https://ghbtns.com/github-btn.html?user=eisneim&repo=react-html5-video&type=star&count=true", frameborder: "0", scrolling: "0", height: "20px" })
+								_react2["default"].createElement("iframe", { src: "https://ghbtns.com/github-btn.html?user=eisneim&repo=react-html5-video&type=star&count=true", frameBorder: "0", scrolling: "0", height: "20px" })
 							),
 							_react2["default"].createElement(
 								"li",
 								null,
-								_react2["default"].createElement("iframe", { src: "https://ghbtns.com/github-btn.html?user=eisneim&repo=react-html5-video&type=fork&count=true", frameborder: "0", scrolling: "0", height: "20px" })
+								_react2["default"].createElement("iframe", { src: "https://ghbtns.com/github-btn.html?user=eisneim&repo=react-html5-video&type=fork&count=true", frameBorder: "0", scrolling: "0", height: "20px" })
 							),
 							_react2["default"].createElement(
 								"li",
 								null,
-								_react2["default"].createElement("iframe", { src: "https://ghbtns.com/github-btn.html?user=eisneim&type=follow&count=true", frameborder: "0", scrolling: "0", width: "150px", height: "20px" })
+								_react2["default"].createElement("iframe", { src: "https://ghbtns.com/github-btn.html?user=eisneim&type=follow&count=true", frameBorder: "0", scrolling: "0", width: "150px", height: "20px" })
 							)
 						)
 					)
@@ -22843,6 +22851,14 @@ var Video = (function (_React$Component) {
 			this.setState(state);
 		}
 	}, {
+		key: "_setSubtitle",
+		value: function _setSubtitle(index) {
+			dd("_setSubtitle", index);
+			if (this.$video.textTracks[this.state.activeSubtitle]) this.$video.textTracks[this.state.activeSubtitle].mode = "disabled";
+			this.$video.textTracks[index].mode = "showing";
+			this.setState({ activeSubtitle: index });
+		}
+	}, {
 		key: "$setWraperDimension",
 		value: function $setWraperDimension($video) {
 			if (this.props.width) return;
@@ -22853,15 +22869,64 @@ var Video = (function (_React$Component) {
 			}
 		}
 	}, {
+		key: "$getSubtitleTracksMenu",
+		value: function $getSubtitleTracksMenu() {
+			var _this2 = this;
+
+			var $menuItems = [];
+			if (!this.$video || this.$video.textTracks.length <= 0) return $menuItems;
+
+			var _loop = function (ii) {
+				var track = _this2.$video.textTracks[ii];
+				$menuItems.push(_react2["default"].createElement(
+					"li",
+					{ key: ii },
+					_react2["default"].createElement(
+						"button",
+						{ onClick: function (e) {
+								return _this2._setSubtitle(ii);
+							} },
+						track.label
+					)
+				));
+			};
+
+			for (var ii = 0; ii < this.$video.textTracks.length; ii++) {
+				_loop(ii);
+			}
+			this.subTitleMenu = _react2["default"].createElement(
+				"span",
+				{ className: "r5-subtitle" },
+				_react2["default"].createElement(
+					"button",
+					null,
+					this.icons.subtitles
+				),
+				_react2["default"].createElement(
+					"ul",
+					{ className: "r5-subtitle-menu" },
+					$menuItems
+				)
+			);
+			return this.subTitleMenu;
+		}
+	}, {
 		key: "$getSubtitleTracks",
 
 		// generate subtitle tracks: <track >
 		value: function $getSubtitleTracks(subtitles) {
-			return [];
+			if (!Array.isArray(subtitles)) return "";
+			var $tracks = [];
+			for (var ii = 0; ii < subtitles.length; ii++) {
+				var track = subtitles[ii];
+				$tracks.push(_react2["default"].createElement("track", { src: track.src, kind: "subtitles", srclang: track.lang, label: track.label, key: ii }));
+			}
+			return $tracks;
 		}
 	}, {
 		key: "$getSource",
 		value: function $getSource(sources) {
+			if (!Array.isArray(sources)) return [];
 			var $sources = [];
 			for (var ii = 0; ii < sources.length; ii++) {
 				var ss = sources[ii];
@@ -22873,7 +22938,7 @@ var Video = (function (_React$Component) {
 	}, {
 		key: "render",
 		value: function render() {
-			var _this2 = this;
+			var _this3 = this;
 
 			var _props = this.props;
 			var subtitles = _props.subtitles;
@@ -22927,7 +22992,7 @@ var Video = (function (_React$Component) {
 						_react2["default"].createElement("input", { type: "range", min: "0.0", max: "100.0", step: "0.5",
 							value: this.state.seekProgress,
 							onChange: function (e) {
-								return _this2._setTime(e.target.value, true);
+								return _this3._setTime(e.target.value, true);
 							} })
 					),
 					_react2["default"].createElement(
@@ -22951,7 +23016,7 @@ var Video = (function (_React$Component) {
 								{ className: "r5-volume-inner", style: { width: "80px" } },
 								_react2["default"].createElement("div", { className: "r5-volume-bar", style: { width: this.state.volume * 100 + "%" } }),
 								_react2["default"].createElement("input", { type: "range", min: "0", max: "1", step: "0.05", value: this.state.volume, onChange: function (e) {
-										return _this2._volume(e.target.value);
+										return _this3._volume(e.target.value);
 									} })
 							)
 						),
@@ -22963,11 +23028,7 @@ var Video = (function (_React$Component) {
 						_react2["default"].createElement(
 							"div",
 							{ className: "r5-pull-right" },
-							_react2["default"].createElement(
-								"button",
-								{ className: "r5-subtitle" },
-								this.icons.subtitles
-							),
+							this.$subTitleMenu || this.$getSubtitleTracksMenu() || "",
 							_react2["default"].createElement(
 								"button",
 								{ className: "r5-fullscreen", onClick: this._fullscreen },
@@ -22988,7 +23049,8 @@ var Video = (function (_React$Component) {
 				duration: "00:00",
 				loadedProgress: 0,
 				seekProgress: 0, // how much has played
-				volume: this.props.volume
+				volume: this.props.volume,
+				activeSubtitle: null
 			};
 			var fill = this.props.controlPanelStyle == "overlay" ? "#ffffff" : "#3FBA97";
 			this.icons = {};
@@ -23032,7 +23094,7 @@ var Video = (function (_React$Component) {
 				"svg",
 				{ xmlns: "http://www.w3.org/2000/svg", width: "24", height: "24", viewBox: "0 0 24 24" },
 				_react2["default"].createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-				_react2["default"].createElement("path", { d: "M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM4 12h4v2H4v-2zm10 6H4v-2h10v2zm6 0h-4v-2h4v2zm0-4H10v-2h10v2z", fill: fill })
+				_react2["default"].createElement("path", { d: "M19 4H5c-1.11 0-2 .9-2 2v12c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 7H9.5v-.5h-2v3h2V13H11v1c0 .55-.45 1-1 1H7c-.55 0-1-.45-1-1v-4c0-.55.45-1 1-1h3c.55 0 1 .45 1 1v1zm7 0h-1.5v-.5h-2v3h2V13H18v1c0 .55-.45 1-1 1h-3c-.55 0-1-.45-1-1v-4c0-.55.45-1 1-1h3c.55 0 1 .45 1 1v1z", fill: fill })
 			);
 			this.icons.fullscreen = _react2["default"].createElement(
 				"svg",
