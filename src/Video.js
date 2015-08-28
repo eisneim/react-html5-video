@@ -119,6 +119,13 @@ window.$video = $video;
 		};
 		this.setState(state);
 	}
+	_setSubtitle( index ){
+		dd("_setSubtitle",index)
+		if( this.$video.textTracks[this.state.activeSubtitle] ) 
+			this.$video.textTracks[this.state.activeSubtitle].mode = "disabled";
+		this.$video.textTracks[index].mode = "showing";
+		this.setState({activeSubtitle: index })
+	}
 	$setWraperDimension( $video ){
 		if( this.props.width ) return;
 		dd("should set setWraperDimension");
@@ -127,11 +134,37 @@ window.$video = $video;
 			this.$wraper.style.height = ($video.videoHeight || $video.clientHeight) +"px"
 		}
 	}
+	$getSubtitleTracksMenu(){
+		var $menuItems = []
+		if( !this.$video || this.$video.textTracks.length <= 0 ) return $menuItems;
+		for(let ii=0; ii< this.$video.textTracks.length; ii++ ){
+			let track = this.$video.textTracks[ii];
+			$menuItems.push(
+				<li key={ii}><button onClick={ e=>this._setSubtitle(ii) }>{ track.label }</button></li>
+			)
+		}
+		this.subTitleMenu = (
+			<span className="r5-subtitle">
+				<button>{this.icons.subtitles}</button>
+				<ul className="r5-subtitle-menu">{ $menuItems }</ul>
+			</span>
+		)
+		return this.subTitleMenu
+	}
 	// generate subtitle tracks: <track >
 	$getSubtitleTracks( subtitles ){
-		return []
+		if(!Array.isArray(subtitles)) return "";
+		var $tracks = [];
+		for(var ii=0;ii<subtitles.length;ii++){
+			let track = subtitles[ii];
+			$tracks.push(
+				<track src={track.src} kind="subtitles" srclang={track.lang} label={track.label} key={ii}/>
+			)
+		}
+		return  $tracks
 	}
 	$getSource( sources ){
+		if(!Array.isArray(sources)) return [];
 		var $sources = [];
 		for(var ii =0 ;ii<sources.length; ii++){
 			let ss = sources[ii]
@@ -188,7 +221,7 @@ window.$video = $video;
 						</div>
 						<span	className="r5-timecode">{this.state.currentTime+" / "+this.state.duration}</span>
 						<div className="r5-pull-right">
-							<button className="r5-subtitle">{this.icons.subtitles}</button>
+							{ this.$subTitleMenu || this.$getSubtitleTracksMenu() || ""}
 							<button className="r5-fullscreen" onClick={this._fullscreen}>{this.icons.fullscreen}</button>
 						</div>
 					</div>
@@ -205,6 +238,7 @@ window.$video = $video;
 			loadedProgress: 0, 
 			seekProgress: 0,// how much has played
 			volume: this.props.volume,
+			activeSubtitle:null,
 		}
 		var fill = this.props.controlPanelStyle == "overlay"?"#ffffff":"#3FBA97";
 		this.icons = {}
@@ -247,7 +281,7 @@ window.$video = $video;
 		this.icons.subtitles = (
 			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
 			    <path d="M0 0h24v24H0z" fill="none"/>
-			    <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM4 12h4v2H4v-2zm10 6H4v-2h10v2zm6 0h-4v-2h4v2zm0-4H10v-2h10v2z" fill={fill}/>
+			    <path d="M19 4H5c-1.11 0-2 .9-2 2v12c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 7H9.5v-.5h-2v3h2V13H11v1c0 .55-.45 1-1 1H7c-.55 0-1-.45-1-1v-4c0-.55.45-1 1-1h3c.55 0 1 .45 1 1v1zm7 0h-1.5v-.5h-2v3h2V13H18v1c0 .55-.45 1-1 1h-3c-.55 0-1-.45-1-1v-4c0-.55.45-1 1-1h3c.55 0 1 .45 1 1v1z" fill={fill}/>
 			</svg>
 		)
 		this.icons.fullscreen = (

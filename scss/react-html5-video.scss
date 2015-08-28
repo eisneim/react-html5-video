@@ -16,6 +16,10 @@ $seekbarColor: #44FFB4;  // #3FBA97;
 	min-width: 200px;
 	position: relative;
 	overflow: hidden;
+	ul{
+		list-style: none;
+		padding:0;margin:0;
+	}
 	.r5-content{
 		position:absolute;
 		width: 100%;
@@ -138,6 +142,33 @@ $seekbarColor: #44FFB4;  // #3FBA97;
 			display: none;
 		}
 	}
+
+	.r5-subtitle{
+		position:relative;
+		display:inline-block;
+		&:hover .r5-subtitle-menu{
+			visibility:visible;
+			opacity:1;
+			transition: visibility 0s , opacity 0.3s ease;
+		}
+	}
+	.r5-subtitle-menu{
+		position:absolute;
+		padding-bottom: 20px;
+		bottom: 20px;
+		left: -5px;
+		opacity:0;
+		visibility: hidden;
+		transition: visibility 0s 0.3s, opacity 0.3s ease;
+		// background-color: rgba(255,255,255,0.2);
+	}
+	::cue{ // the subtitle text style
+		line-height: 1.4;
+		opacity:0.8;
+		// margin: 0 1em 1em;
+		background: rgba(0,0,0,0.3)
+	}
+
 	// --------------------------------------
 	.r5-controls.r5-controls--overlay{
 		color: #fff;
@@ -145,6 +176,7 @@ $seekbarColor: #44FFB4;  // #3FBA97;
 		bottom: 0;
 		left:0;
 		background:linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.5)) 0 0px repeat-x;
+		button{color: #fff; &.active{color: $seekbarColor }}
 		&.r5-auto-hide{
 			opacity:0;
 			transition: opacity 0.3s ease-out;
@@ -164,6 +196,7 @@ $seekbarColor: #44FFB4;  // #3FBA97;
 	.r5-controls.r5-controls--fixed{
 		
 	}
+
 }
 
 .r5-wraper:hover .r5-controls--overlay.r5-auto-hide{
