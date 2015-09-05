@@ -121,7 +121,7 @@ gulp.task("js-es6",function(){
 	.pipe( babel({
 		blacklist: ['regenerator','bluebirdCoroutines'],
 		// optional: ["es7.asyncFunctions"],
-		only: __dirname+'/src/**/*.js',
+		// only: __dirname+'/src/**/*.js',
 	}) )
 	.on( "error", handleError)
 	.pipe(gulp.dest("./lib"))

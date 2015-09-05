@@ -136,4 +136,14 @@ ul.gh-btns{
 .gh-btns iframe body,.gh-btns iframe{
 	border:none;
 }
-
+/*-------text area-------*/
+.main textarea{
+	width: 600px;
+	margin-top: 15px;
+	min-height: 120px;
+}
+/*---- code highlight------*/
+.main pre[class*='language-'] > code[data-language]  {
+	overflow-x:auto;
+	overflow-y:auto;
+}

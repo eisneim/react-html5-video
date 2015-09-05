@@ -21,6 +21,13 @@ class App extends React.Component {
 		super()
 		this.api = null;
 		this.getApi = this.getApi.bind( this );
+		this._setContent = this._setContent.bind(this);
+		this._toggleControls = this._toggleControls.bind(this);
+
+		this.state = {
+			content:"<p>Any HTML content (demo only)</p>",
+			showControls: true,
+		}
 	}
 	getApi(api){
 		console.log( this )
@@ -42,6 +49,17 @@ class App extends React.Component {
 	_setTime( second ){
 		if(!this.api) return;
 		this.api.setTime(second )
+	}
+	_setContent(e){
+		this.setState({
+			content: e.target.value
+		})
+	}
+	_toggleControls(e){
+		console.log("toggle controls")
+		this.setState({
+			showControls: !this.state.showControls
+		})
 	}
 	render(){
 		var sources = ["./video/video.mp4","./video/video.webm","./video/video.ogv"]
@@ -67,9 +85,10 @@ class App extends React.Component {
 							subtitles={subtitles}
 							poster="./video/poster.png" 
 							metaDataLoaded={this.getApi}
+							controls={this.state.showControls}
 						>
 							<h3 className="pull-right"><a href="http://glexe.com" target="_blank">LOGO</a></h3>
-							<p>Any HTML content</p>
+							<div dangerouslySetInnerHTML={{__html: this.state.content }}></div>
 						</Video>
 						<ul className="gh-btns">
 							<li><iframe src="https://ghbtns.com/github-btn.html?user=eisneim&repo=react-html5-video&type=star&count=true" frameBorder="0" scrolling="0" height="20px"></iframe></li>
@@ -86,8 +105,9 @@ class App extends React.Component {
 						<button onClick={e=>this._volume(-0.2)}> volume - </button>
 						<button onClick={e=>this._setTime(5)}> setTime to 5s </button>
 						<button onClick={e=>this._fullscreen()}> fullScreen </button>
+						<button onClick={this._toggleControls}> toggleControls </button>
 					</div>
-
+					<textarea value={this.state.content} onChange={this._setContent} />
 					<h2>Quick start</h2>
 					<Code lan="javascript">
 						npm install --save react-html5-video
@@ -114,6 +134,8 @@ class MyAewsomeApp extends React.Component{
 
 `
 					}</Code>
+					<h2>API</h2>
+					<p>please go to <a href="https://github.com/eisneim/react-html5-video">github repo</a> to see full api</p>
 				</section>
 			</div>
 		)
