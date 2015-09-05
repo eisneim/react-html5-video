@@ -123,7 +123,7 @@ class App extends React.Component {
 					<textarea value={this.state.content} onChange={this._setContent} />
 					<h2>Quick start</h2>
 					<Code lan="javascript">
-						npm install --save react-html5-video
+						npm install --save react-h5-video
 					</Code>
 					<p>load in the stylesheet,(in order to make it easier for developers to customize video player's style, css is not written in js)</p>
 					<Code lan="markup">
@@ -131,7 +131,7 @@ class App extends React.Component {
 					</Code>
 					<Code lan="javascript">{
 `import React from "react";
-import Video from "react-html5-video";
+import Video from "react-h5-video";
 
 class MyAewsomeApp extends React.Component{
 	render(){

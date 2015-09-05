@@ -19,7 +19,7 @@ used by zexeo.com
 
 ##install
 ```
-npm install --save react-html5-video
+npm install --save react-h5-video
 ```
 load in the stylesheet,(in order to make it easier for developers to customize video player's style, css is not written in js)
 ```html
@@ -28,7 +28,7 @@ load in the stylesheet,(in order to make it easier for developers to customize v
 basic usage
 ```javascript
 import React from "react";
-import Video from "react-html5-video";
+import Video from "react-h5-video";
 
 class MyAewsomeApp extends React.Component{
 	render(){

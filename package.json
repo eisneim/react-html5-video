@@ -1,5 +1,5 @@
 {
-  "name": "react-html5-video",
+  "name": "react-h5-video",
   "version": "1.0.0",
   "description": "html5 video component for react.js app",
   "main": "index.js",
@@ -43,7 +43,7 @@
     "video",
     "player"
   ],
-  "author": "eisneim <eisneim1@gmail.com>",
+  "author": "eisneim",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/eisneim/react-html5-video/issues"
