@@ -127,7 +127,7 @@ class App extends React.Component {
 					</Code>
 					<p>load in the stylesheet,(in order to make it easier for developers to customize video player's style, css is not written in js)</p>
 					<Code lan="markup">
-					{`<link rel="stylesheet" type="text/css" href="node_modules/react-html5-video/lib/react-html5-video.css">`}
+					{`<link rel="stylesheet" type="text/css" href="node_modules/react-h5-video/lib/react-html5-video.css">`}
 					</Code>
 					<Code lan="javascript">{
 `import React from "react";
