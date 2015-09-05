@@ -127,12 +127,18 @@ window.$video = $video;
 		this.setState({activeSubtitle: index })
 	}
 	$setWraperDimension( $video ){
-		if( this.props.width ) return;
-		dd("should set setWraperDimension");
-		if( !this.props.width ){
-			this.$wraper.style.width = ( $video.videoWidth || $video.clientWidth) +"px"
-			this.$wraper.style.height = ($video.videoHeight || $video.clientHeight) +"px"
-		}
+		var width =  this.props.width || $video.videoWidth || $video.clientWidth;
+		var height = this.props.height || $video.videoHeight || $video.clientHeight;
+		
+		dd("should set setWraperDimension ",width,height);
+		this.$wraper.style.width = width +"px"
+		// set contnet height
+		React.findDOMNode( this.refs["r5Content"] ).style.height = height + "px";
+		// if controlpanel style is fixed
+		if(this.props.controlPanelStyle == "fixed" ) height += 50;
+		// set the height of the wrapper;
+		this.$wraper.style.height = height +"px";
+		
 	}
 	$getSubtitleTracksMenu(){
 		var $menuItems = []
@@ -187,8 +193,8 @@ window.$video = $video;
 			wraperStyle.height = this.props.height+"px";
 		}
 
-		var controlsClass = `r5-controls r5-controls--${controlPanelStyle} ${autoHideControls?"r5-auto-hide":""}`
-		
+		var controlsClass = `r5-controls r5-controls--${controlPanelStyle} ${autoHideControls?"r5-auto-hide":""} `
+		if(!this.props.controls) controlsClass = "r5-controls-hidden";
 
 		return (
 			<div className="r5-wraper" style={wraperStyle}>
@@ -199,7 +205,7 @@ window.$video = $video;
 				<div className="r5-overlay" onClick={this._togglePlay}>
 					{!this.$video || this.$video.currentTime<=0? this.icons.playCircle:""}
 				</div>
-				<div className="r5-content">{this.props.children}</div>
+				<div ref="r5Content" className="r5-content">{this.props.children}</div>
 				<div className={controlsClass}>
 					<div className="r5-seekbar-wraper" ref="seekbarWraper">
 						<div className="r5-seekbar-loaded" ref="seekbar" style={{width:this.state.loadedProgress+"%"}}></div>
@@ -240,7 +246,8 @@ window.$video = $video;
 			volume: this.props.volume,
 			activeSubtitle:null,
 		}
-		var fill = this.props.controlPanelStyle == "overlay"?"#ffffff":"#3FBA97";
+		// var fill = this.props.controlPanelStyle == "overlay"?"#ffffff":"#3FBA97";
+		var fill = "#ffffff";
 		this.icons = {}
 		this.icons.play = (
 			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
@@ -325,7 +332,7 @@ Video.defaultProps = {
 	autoHideControls:true,
 	volume: 				1.0,
 	mute: 					false,
-	controlPanelStyle: "overlay",
+	controlPanelStyle: "fixed",
 	preload: 				"auto",
 }
 
