@@ -27,6 +27,7 @@ class App extends React.Component {
 		this.state = {
 			content:"<p>Any HTML content (demo only)</p>",
 			showControls: true,
+			controlPanelStyle:"overlay",
 		}
 	}
 	getApi(api){
@@ -61,6 +62,10 @@ class App extends React.Component {
 			showControls: !this.state.showControls
 		})
 	}
+	_changeStyle(style){
+		console.log("set panel style to:",  style)
+		this.setState({controlPanelStyle: style });
+	}
 	render(){
 		var sources = ["./video/video.mp4","./video/video.webm","./video/video.ogv"]
 		var subtitles = [
@@ -86,6 +91,7 @@ class App extends React.Component {
 							poster="./video/poster.png" 
 							metaDataLoaded={this.getApi}
 							controls={this.state.showControls}
+							controlPanelStyle={this.state.controlPanelStyle}
 						>
 							<h3 className="pull-right"><a href="http://glexe.com" target="_blank">LOGO</a></h3>
 							<div dangerouslySetInnerHTML={{__html: this.state.content }}></div>
@@ -106,6 +112,13 @@ class App extends React.Component {
 						<button onClick={e=>this._setTime(5)}> setTime to 5s </button>
 						<button onClick={e=>this._fullscreen()}> fullScreen </button>
 						<button onClick={this._toggleControls}> toggleControls </button>
+						<label>
+							controlPanelStyle: 
+							<select value={this.state.controlPanelStyle} onChange={e=>this._changeStyle(e.target.value)}>
+								<option value="overlay">overlay</option>
+								<option value="fixed">fixed</option>
+							</select>
+						</label>
 					</div>
 					<textarea value={this.state.content} onChange={this._setContent} />
 					<h2>Quick start</h2>

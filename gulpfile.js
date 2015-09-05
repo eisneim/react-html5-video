@@ -123,6 +123,7 @@ gulp.task("js-es6",function(){
 		// optional: ["es7.asyncFunctions"],
 		// only: __dirname+'/src/**/*.js',
 	}) )
+	.pipe( uglify({ compress:true, mangle:true}) )
 	.on( "error", handleError)
 	.pipe(gulp.dest("./lib"))
 	// .on('end', function() {

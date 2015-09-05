@@ -2,9 +2,6 @@ import React from "react"
 import path from "path"
 import { formatTime } from "./utils/dateTime.js"
 
-window.r5Debug = require("debug");
-var dd = window.r5Debug("r5");
-
 var videoEvents = ["play","pause","playing","abort","progress","ratechange","canplay","canplaythrough","durationchange","emptied","ended","loadeddata","loadedmetadata","loadstart","seeked","seeking","stalled","suspend","timeupdate","volumechange","waiting","error","encrypted","mozaudioavailable","interruptbegin","interruptend"];
 
 class Video extends React.Component {
@@ -28,9 +25,7 @@ class Video extends React.Component {
 		 */
 		this.$wraper = React.findDOMNode(this);
 		var $video = this.$video = this.api.$video = React.findDOMNode( this.refs.video )
-window.$video = $video;
-		// set $wrapers width equal to video width, if width props is not set;
-		this.$setWraperDimension(this.$video);
+// window.$video = $video;
 		$video.addEventListener("loadedmetadata", this._metaDataLoaded )
 		// this update interval gap is too big make progressbar not snapy
 		// $video.addEventListener("timeupdate", this._timeupdate )
@@ -43,11 +38,10 @@ window.$video = $video;
 	 * after metaData Loaded we can get video dimentions and set width,height of video wraper;
 	 */
 	_metaDataLoaded(e){
-		dd("metadata loaded")
+		//console.log("metadata loaded")
 		if(this.props.metaDataLoaded && typeof this.props.metaDataLoaded == "function" ){
 			this.props.metaDataLoaded( this.api );
 		}
-		this.$setWraperDimension(this.$video);
 		// calculate width of seek bar and progress;
 		this.$seekbarWraper = React.findDOMNode( this.refs.seekbarWraper );
 		this.setState({duration: formatTime(this.$video.duration) })
@@ -58,7 +52,7 @@ window.$video = $video;
 	_setTime( percent, isPercent ){
 		if( isPercent && percent>100) return;
 		var time = isPercent? percent * this.$video.duration / 100 : percent;
-		dd("change time", time )
+		//console.log("change time", time )
 		if(this.$video.fastSeek ){
 			this.$video.fastSeek(time)
 		}else{
@@ -91,7 +85,7 @@ window.$video = $video;
 		this.setState({loadedProgress: total / this.$video.duration * 100 })
 	}
 	_togglePlay(){
-		dd("toggle play")
+		//console.log("toggle play")
 		if( !this.seekbarUpdateTimer ) this.seekbarUpdateInterval();
 
 		if(!this.state.isPlaying){
@@ -120,25 +114,11 @@ window.$video = $video;
 		this.setState(state);
 	}
 	_setSubtitle( index ){
-		dd("_setSubtitle",index)
+		//console.log("_setSubtitle",index)
 		if( this.$video.textTracks[this.state.activeSubtitle] ) 
 			this.$video.textTracks[this.state.activeSubtitle].mode = "disabled";
 		this.$video.textTracks[index].mode = "showing";
 		this.setState({activeSubtitle: index })
-	}
-	$setWraperDimension( $video ){
-		var width =  this.props.width || $video.videoWidth || $video.clientWidth;
-		var height = this.props.height || $video.videoHeight || $video.clientHeight;
-		
-		dd("should set setWraperDimension ",width,height);
-		this.$wraper.style.width = width +"px"
-		// set contnet height
-		React.findDOMNode( this.refs["r5Content"] ).style.height = height + "px";
-		// if controlpanel style is fixed
-		if(this.props.controlPanelStyle == "fixed" ) height += 50;
-		// set the height of the wrapper;
-		this.$wraper.style.height = height +"px";
-		
 	}
 	$getSubtitleTracksMenu(){
 		var $menuItems = []
@@ -185,16 +165,19 @@ window.$video = $video;
 		const { subtitles, loop, autoPlay, poster,preload, sources, controlPanelStyle, autoHideControls } = this.props
 		//html5 video options
 		var options = { loop, autoPlay, poster,preload };
-		var wraperStyle = {};
-		if( this.props.width ){
-			options.width = this.props.width 
-			options.height= this.props.height
-			wraperStyle.width = this.props.width+"px";
-			wraperStyle.height = this.props.height+"px";
-		}
+		var wraperStyle = {}, contentWraperStyle = {};
+		let $video = this.$video || {};
+		let vWidth =  this.props.width || $video.videoWidth || $video.clientWidth;
+		let vHeight = this.props.height || $video.videoHeight || $video.clientHeight;
+		options.width = vWidth 
+		options.height= vHeight
+		wraperStyle.width = vWidth+"px";
+		wraperStyle.height = contentWraperStyle.height = vHeight+"px";
+		if(this.props.controlPanelStyle == "fixed" ) wraperStyle.height = (vHeight+50)+"px";
 
 		var controlsClass = `r5-controls r5-controls--${controlPanelStyle} ${autoHideControls?"r5-auto-hide":""} `
 		if(!this.props.controls) controlsClass = "r5-controls-hidden";
+	
 
 		return (
 			<div className="r5-wraper" style={wraperStyle}>
@@ -205,7 +188,7 @@ window.$video = $video;
 				<div className="r5-overlay" onClick={this._togglePlay}>
 					{!this.$video || this.$video.currentTime<=0? this.icons.playCircle:""}
 				</div>
-				<div ref="r5Content" className="r5-content">{this.props.children}</div>
+				<div className="r5-content" style={contentWraperStyle}>{this.props.children}</div>
 				<div className={controlsClass}>
 					<div className="r5-seekbar-wraper" ref="seekbarWraper">
 						<div className="r5-seekbar-loaded" ref="seekbar" style={{width:this.state.loadedProgress+"%"}}></div>
@@ -332,7 +315,7 @@ Video.defaultProps = {
 	autoHideControls:true,
 	volume: 				1.0,
 	mute: 					false,
-	controlPanelStyle: "fixed",
+	controlPanelStyle: "overlay",
 	preload: 				"auto",
 }
 

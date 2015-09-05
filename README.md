@@ -1,9 +1,6 @@
 ![preview](snapshot.jpg)
 used by zexeo.com
 
-###under development
-
-
 ##features:
  - simple & easy
  - custom video overlay content( any html content on top of video )
@@ -45,13 +42,14 @@ class MyAewsomeApp extends React.Component{
 }
 ```
 ##props
-```
+```javascript
 Video.propTypes = {
 	metaDataLoaded: 		React.PropTypes.func,// video's meta data loaded callback
 	
+
 	// properties
 	sources: 						React.PropTypes.array,
-	subtitles: 					React.PropTypes.array, // [{src:"foo.vtt", label:"English",srclan:"en" }]
+	subtitles: 					React.PropTypes.array, // [{src:"foo.vtt", label:"English",lang:"en" }]
 	autoPlay: 					React.PropTypes.bool,
 	controls: 					React.PropTypes.bool,
 	autoHideControls: 	React.PropTypes.bool,
@@ -64,6 +62,7 @@ Video.propTypes = {
 	height: 						React.PropTypes.string,
 	volume: 						React.PropTypes.number,
 }
+// here are all some default props
 Video.defaultProps = {
 	autoPlay:  			false,
 	loop: 					false,
@@ -76,3 +75,28 @@ Video.defaultProps = {
 }
 
 ```
+###video meta data loaded callback
+onece the meta data is loaded, you can get the info of this video(width,height,duration...etc), then you can use the returnd api to perform basic actions
+the reutned api has throse property:
+ - `$video` the html5 <video> DOM element,
+ -	`fullscreen` function(), 
+ -	`setTime` function( second )
+ -	`togglePlay` function()
+ -	`volume` function( mumber:0-1 )
+
+```javascript
+class App extends React.Component{
+	loaded(api){
+		this.videoApi = api;
+		// console.log( api.$video.duration ) 
+		// to toggle play state, just call this.videoApi.togglePlay()
+	}
+	render(){
+		return(
+			<Video sources={sources}  metaDataLoaded={this.loaded}/>
+		)
+	}
+}
+```
+
+
