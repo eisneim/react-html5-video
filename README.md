@@ -15,17 +15,18 @@ used by zexeo.com
  - playback rate change
  - select defferient resulution
  - use without browserify
+ - complete tests
 
 ##install
 ```
 npm install --save react-html5-video
 ```
 load in the stylesheet,(in order to make it easier for developers to customize video player's style, css is not written in js)
-```
+```html
 <link rel="stylesheet" type="text/css" href="node_modules/react-html5-video/lib/react-html5-video.css">
 ```
 basic usage
-```
+```javascript
 import React from "react";
 import Video from "react-html5-video";
 
@@ -48,35 +49,36 @@ Video.propTypes = {
 	
 
 	// properties
-	sources: 						React.PropTypes.array,
-	subtitles: 					React.PropTypes.array, // [{src:"foo.vtt", label:"English",lang:"en" }]
-	autoPlay: 					React.PropTypes.bool,
-	controls: 					React.PropTypes.bool,
-	autoHideControls: 	React.PropTypes.bool,
-	controlPanelStyle: 	React.PropTypes.oneOf(["overlay","fixed"]),
-	preload: 						React.PropTypes.oneOf(["auto","none","metadata"]), 
-	loop: 							React.PropTypes.bool,
-	mute: 							React.PropTypes.bool,
-	poster: 						React.PropTypes.string,
-	width: 							React.PropTypes.string,
-	height: 						React.PropTypes.string,
-	volume: 						React.PropTypes.number,
+	sources:		React.PropTypes.array,
+	subtitles:		React.PropTypes.array, // [{src:"foo.vtt", label:"English",lang:"en" }]
+	autoPlay: 		React.PropTypes.bool,
+	controls:		React.PropTypes.bool,
+	autoHideControls:		React.PropTypes.bool,
+	controlPanelStyle:		React.PropTypes.oneOf(["overlay","fixed"]),
+	preload:		React.PropTypes.oneOf(["auto","none","metadata"]), 
+	loop:		React.PropTypes.bool,
+	mute:		React.PropTypes.bool,
+	poster:		React.PropTypes.string,
+	width:		React.PropTypes.string,
+	height:		React.PropTypes.string,
+	volume:		React.PropTypes.number,
 }
 // here are all some default props
 Video.defaultProps = {
-	autoPlay:  			false,
-	loop: 					false,
-	controls: 			true,
-	autoHideControls:true,
-	volume: 				1.0,
-	mute: 					false,
-	controlPanelStyle: "overlay",
-	preload: 				"auto",
+	autoPlay:		false,
+	loop:		false,
+	controls:		true,
+	autoHideControls:		true,
+	volume:		1.0,
+	mute:		false,
+	controlPanelStyle:		"overlay",
+	preload:		"auto",
 }
 
 ```
 ###video meta data loaded callback
 onece the meta data is loaded, you can get the info of this video(width,height,duration...etc), then you can use the returnd api to perform basic actions
+
 the reutned api has throse property:
  - `$video` the html5 <video> DOM element,
  -	`fullscreen` function(), 

@@ -7,7 +7,6 @@
     "babelify": "^6.1.2",
     "babel-runtime": "^5.5.5",
     "browserify": "^10.2.4",
-    "debug": "^2.2.0",
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^2.3.1",
     "gulp-concat": "^2.5.2",
