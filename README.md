@@ -80,11 +80,39 @@ Video.defaultProps = {
 onece the meta data is loaded, you can get the info of this video(width,height,duration...etc), then you can use the returnd api to perform basic actions
 
 the reutned api has throse property:
- - `$video` the html5 <video> DOM element,
- -	`fullscreen` function(), 
- -	`setTime` function( second )
- -	`togglePlay` function()
- -	`volume` function( mumber:0-1 )
+<table><thead>
+<tr>
+<th align="left">Property</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td align="left">$video</td>
+<td align="left">DOM Node</td>
+<td align="left">the HTML5 video DOM node, you can attatch event listeners to $video</td>
+</tr>
+<tr>
+<td align="left">fullscreen</td>
+<td align="left">function</td>
+<td align="left">make video enter fullscreen mode</td>
+</tr>
+<tr>
+<td align="left">setTime</td>
+<td align="left">function</td>
+<td align="left">setTime(number) to change seekbar time</td>
+</tr>
+<tr>
+<td align="left">togglePlay</td>
+<td align="left">function</td>
+<td align="left">play or pause video</td>
+</tr>
+<tr>
+<td align="left">volume</td>
+<td align="left">function</td>
+<td align="left">change volumn between 0 to 1.0</td>
+</tr>
+</tbody></table>
 
 ```javascript
 class App extends React.Component{
