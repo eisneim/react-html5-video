@@ -1,5 +1,6 @@
+[WIP] don't use in production
+===========
 ![preview](snapshot.jpg)
-used by zexeo.com
 [demo](https://github.com/eisneim/react-html5-video)
 
 ##features:

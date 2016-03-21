@@ -1,9 +1,10 @@
 import React from "react";
+import ReactDom from 'react-dom'
 import Video from "../../src/Video.js";
 
 class Code extends React.Component{
 	componentDidMount(){
-		var node = React.findDOMNode(this);
+		var node = ReactDom.findDOMNode(this);
 		Prism.highlightElement( node,false,function(){});
 	}
 	render(){
@@ -155,7 +156,8 @@ class MyAewsomeApp extends React.Component{
 	}
 }
 
+var $app = document.getElementById('app')
 
-React.render( <App />, document.body );
+ReactDom.render( <App />, $app);
 
 
