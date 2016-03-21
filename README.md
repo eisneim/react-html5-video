@@ -64,6 +64,7 @@ Video.propTypes = {
 	width:		React.PropTypes.string,
 	height:		React.PropTypes.string,
 	volume:		React.PropTypes.number,
+	seekDisabled: React.PropTypes.bool,
 }
 // here are all some default props
 Video.defaultProps = {
@@ -75,6 +76,7 @@ Video.defaultProps = {
 	mute:		false,
 	controlPanelStyle:		"overlay",
 	preload:		"auto",
+	seekDisabled: false,
 }
 
 ```

@@ -57,6 +57,7 @@ class Video extends React.Component {
 	}
 
 	_setTime( percent, isPercent ){
+		if(this.state.seekDisabled) return;
 		if( isPercent && percent>100) return;
 		var time = isPercent? percent * this.$video.duration / 100 : percent;
 		//console.log("change time", time )
@@ -249,6 +250,7 @@ class Video extends React.Component {
 			seekProgress: 0,// how much has played
 			volume: this.props.volume,
 			activeSubtitle:null,
+			seekDisabled: this.props.seekDisabled?true: false,
 		}
 
 		// var fill = this.props.controlPanelStyle == "overlay"?"#ffffff":"#3FBA97";
@@ -328,6 +330,7 @@ Video.propTypes = {
 	width: 							React.PropTypes.string,
 	height: 						React.PropTypes.string,
 	volume: 						React.PropTypes.number,
+	seekDisabled: 					React.PropTypes.bool,
 
 	// overlayStyle: 			React.PropTypes.object,
 }
@@ -341,6 +344,7 @@ Video.defaultProps = {
 	mute: 					false,
 	controlPanelStyle: "overlay",
 	preload: 				"auto",
+	seekDisabled: false,
 }
 
 export default Video
