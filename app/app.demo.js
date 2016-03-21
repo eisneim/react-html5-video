@@ -1,9 +1,10 @@
 import React from "react";
+import ReactDom from 'react-dom'
 import Video from "../../src/Video.js";
 
 class Code extends React.Component{
 	componentDidMount(){
-		var node = React.findDOMNode(this);
+		var node = ReactDom.findDOMNode(this);
 		Prism.highlightElement( node,false,function(){});
 	}
 	render(){
@@ -127,7 +128,7 @@ class App extends React.Component {
 					</Code>
 					<p>load in the stylesheet,(in order to make it easier for developers to customize video player's style, css is not written in js)</p>
 					<Code lan="markup">
-					{`<link rel="stylesheet" type="text/css" href="node_modules/react-html5-video/lib/react-html5-video.css">`}
+					{`<link rel="stylesheet" type="text/css" href="node_modules/react-h5-video/lib/react-html5-video.css">`}
 					</Code>
 					<Code lan="javascript">{
 `import React from "react";
@@ -155,7 +156,8 @@ class MyAewsomeApp extends React.Component{
 	}
 }
 
+var $app = document.getElementById('app')
 
-React.render( <App />, document.body );
+ReactDom.render( <App />, $app);
 
 
