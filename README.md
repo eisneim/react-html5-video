@@ -1,5 +1,6 @@
 ![preview](snapshot.jpg)
 used by zexeo.com
+[demo](https://github.com/eisneim/react-html5-video)
 
 ##features:
  - simple & easy

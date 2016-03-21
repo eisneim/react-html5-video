@@ -6,7 +6,7 @@ var videoEvents = ["play","pause","playing","abort","progress","ratechange","can
 
 class Video extends React.Component {
 	constructor(){
-		super()
+		super(props,context)
 		// store all public handler here, and return this api object to parent component;
 		this.api = {}; 
 		var pubHandlers = ["togglePlay","setTime","fullscreen","volume"];
