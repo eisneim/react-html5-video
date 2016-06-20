@@ -10,7 +10,7 @@ class Video extends React.Component {
 	constructor(props,context){
 		super(props,context)
 		// store all public handler here, and return this api object to parent component;
-		this.api = {}; 
+		this.api = {};
 		var pubHandlers = ["togglePlay","setTime","fullscreen","volume"];
 		// save public handlers to api object
 		pubHandlers.forEach( name => {
@@ -19,7 +19,7 @@ class Video extends React.Component {
 		// manually bind all handlers
 		var handlers = ["metaDataLoaded","timeupdate","durationchange","progress"];
 		handlers.forEach( name => this["_"+name] = this["_"+name].bind(this) )
-		
+
 	}
 
 	componentDidMount(){
@@ -33,7 +33,7 @@ class Video extends React.Component {
 		// this update interval gap is too big make progressbar not snapy
 		// $video.addEventListener("timeupdate", this._timeupdate )
 		$video.addEventListener("progress", this._progress )
-		
+
 
 		if( this.props.autoPlay && !this.seekbarUpdateTimer ) this.seekbarUpdateInterval();
 	}
@@ -74,8 +74,8 @@ class Video extends React.Component {
 	_timeupdate(e){
 		var percent = this.$video.currentTime / this.$video.duration * 100;
 		var newState = {
-			seekProgress: percent, 
-			currentTime: formatTime(this.$video.currentTime) 
+			seekProgress: percent,
+			currentTime: formatTime(this.$video.currentTime)
 		}
 		if(this.$video.currentTime >= this.$video.duration ) {
 			newState.isPlaying = false;
@@ -124,14 +124,14 @@ class Video extends React.Component {
 		this.$video.volume = val;
 		var state = {
 			volume: val,
-			isMuted: val<= 0.05? true: false, 
+			isMuted: val<= 0.05? true: false,
 		};
 		this.setState(state);
 	}
 
 	_setSubtitle( index ){
 		//console.log("_setSubtitle",index)
-		if( this.$video.textTracks[this.state.activeSubtitle] ) 
+		if( this.$video.textTracks[this.state.activeSubtitle] )
 			this.$video.textTracks[this.state.activeSubtitle].mode = "disabled";
 		this.$video.textTracks[index].mode = "showing";
 		this.setState({activeSubtitle: index })
@@ -173,7 +173,7 @@ class Video extends React.Component {
 		var $sources = [];
 		for(var ii =0 ;ii<sources.length; ii++){
 			let ss = sources[ii]
-			let extName = path.extname( ss ).substr(1);
+			let extName = path.extname( ss ).substr(1).split('?')[0];
 			$sources.push(
 				<source src={ss} type={"video/"+extName} key={ii}/>
 			)
@@ -189,7 +189,7 @@ class Video extends React.Component {
 		let $video = this.$video || {};
 		let vWidth =  this.props.width || $video.videoWidth || $video.clientWidth;
 		let vHeight = this.props.height || $video.videoHeight || $video.clientHeight;
-		options.width = vWidth 
+		options.width = vWidth
 		options.height= vHeight
 		wraperStyle.width = vWidth+"px";
 		wraperStyle.height = contentWraperStyle.height = vHeight+"px";
@@ -197,7 +197,7 @@ class Video extends React.Component {
 
 		var controlsClass = `r5-controls r5-controls--${controlPanelStyle} ${autoHideControls?"r5-auto-hide":""} `
 		if(!this.props.controls) controlsClass = "r5-controls-hidden";
-	
+
 
 		return (
 			<div className="r5-wraper" style={wraperStyle}>
@@ -213,7 +213,7 @@ class Video extends React.Component {
 					<div className="r5-seekbar-wraper" ref="seekbarWraper">
 						<div className="r5-seekbar-loaded" ref="seekbar" style={{width:this.state.loadedProgress+"%"}}></div>
 						<div className="r5-seekbar" ref="loadedbar" style={{width:this.state.seekProgress+"%"}}></div>
-						<input type="range" min="0.0" max="100.0" step="0.5" 
+						<input type="range" min="0.0" max="100.0" step="0.5"
 							value={this.state.seekProgress}
 							onChange={e=>this._setTime(e.target.value,true)} />
 					</div>
@@ -236,17 +236,17 @@ class Video extends React.Component {
 					</div>
 				</div>
 			</div>
-		)	
+		)
 	}
 
 	componentWillMount(){
-		
+
 		this.state = {
 			isPlaying: this.props.autoPlay?true: false,
 			isMuted: false,
-			currentTime: "00:00", 
+			currentTime: "00:00",
 			duration: "00:00",
-			loadedProgress: 0, 
+			loadedProgress: 0,
 			seekProgress: 0,// how much has played
 			volume: this.props.volume,
 			activeSubtitle:null,
@@ -315,7 +315,7 @@ class Video extends React.Component {
 Video.propTypes = {
 	// callbacks
 	metaDataLoaded: 					React.PropTypes.func,// video's meta data loaded, return video element
-	
+
 	// properties
 	sources: 						React.PropTypes.array,
 	subtitles: 					React.PropTypes.array, // [{src:"foo.vtt", label:"English",srclan:"en" }]
@@ -323,7 +323,7 @@ Video.propTypes = {
 	controls: 					React.PropTypes.bool,
 	autoHideControls: 	React.PropTypes.bool,
 	controlPanelStyle: 	React.PropTypes.oneOf(["overlay","fixed"]), // overlay, fixed
-	preload: 						React.PropTypes.oneOf(["auto","none","metadata"]), 
+	preload: 						React.PropTypes.oneOf(["auto","none","metadata"]),
 	loop: 							React.PropTypes.bool,
 	mute: 							React.PropTypes.bool,
 	poster: 						React.PropTypes.string,
