@@ -185,11 +185,15 @@ class Video extends React.Component {
     if (!Array.isArray(sources)) return [];
     var $sources = [];
     for (var ii = 0; ii < sources.length; ii++) {
-      let src = sources[ii]
-      let type = `video/${path.extname(src).substr(1).split('?')[0]}`;
-      if (typeof src.src !== 'undefined') {
+      let src,
+        type;
+      console.log(sources[ii]);
+      if (typeof sources[ii] === 'Object') {
         src = sources[ii].src
         type = sources[ii].type
+      } else {
+        src = sources[ii]
+        type = `video/${path.extname(src).substr(1).split('?')[0]}`;
       }
       $sources.push(
         <source src={ss} type={type} key={ii}/>
