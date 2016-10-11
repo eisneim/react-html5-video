@@ -187,8 +187,7 @@ class Video extends React.Component {
     for (var ii = 0; ii < sources.length; ii++) {
       let src,
         type;
-      console.log(sources[ii]);
-      if (typeof sources[ii] === 'Object') {
+      if (typeof sources[ii] === 'object') {
         src = sources[ii].src
         type = sources[ii].type
       } else {
@@ -196,7 +195,7 @@ class Video extends React.Component {
         type = `video/${path.extname(src).substr(1).split('?')[0]}`;
       }
       $sources.push(
-        <source src={ss} type={type} key={ii}/>
+        <source src={src} type={type} key={ii}/>
       )
     }
     return $sources;
