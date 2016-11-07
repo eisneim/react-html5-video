@@ -343,6 +343,9 @@ class Video extends React.Component {
   }
 
   componentWillUnmount() {
+    var $video = this.$video = this.api.$video = ReactDOM.findDOMNode(this.refs.video)
+    $video.removeEventListener("loadedmetadata", this._metaDataLoaded)
+    $video.removeEventListener("progress", this._progress)
     if (this.seekbarUpdateTimer) clearInterval(this.seekbarUpdateTimer);
   }
 
