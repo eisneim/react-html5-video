@@ -1,6 +1,6 @@
 {
   "name": "react-h5-video",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "html5 video component for react.js app",
   "main": "index.js",
   "devDependencies": {
