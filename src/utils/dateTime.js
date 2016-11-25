@@ -1,7 +1,3 @@
-var time = {};
-
-export default time;
-
 /**
  * Format seconds as a time string, H:MM:SS or M:SS
  * Supplying a guide (in seconds) will force a number of leading zeros
@@ -11,7 +7,7 @@ export default time;
  * @return {String}         Time formatted as H:MM:SS or M:SS
  * @private
  */
-time.formatTime = function(seconds, guide) {
+export function formatTime(seconds, guide) {
   // Default to using seconds as guide
   guide = guide || seconds;
   var s = Math.floor(seconds % 60),
