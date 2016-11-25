@@ -83,7 +83,7 @@ Video.defaultProps = {
 ###video meta data loaded callback
 onece the meta data is loaded, you can get the info of this video(width,height,duration...etc), then you can use the returnd api to perform basic actions
 
-the reutned api has throse property:
+The returned api has these properties:
 <table><thead>
 <tr>
 <th align="left">Property</th>
@@ -116,6 +116,11 @@ the reutned api has throse property:
 <td align="left">function</td>
 <td align="left">change volumn between 0 to 1.0</td>
 </tr>
+<tr>
+	<td>align="left">registerProgressEventListener</td>
+	<td>align="left">function</td>
+	<td>align="left">You can call this function get updates on how much the video has played.</td>
+</tr>
 </tbody></table>
 
 ```javascript
@@ -133,4 +138,20 @@ class App extends React.Component{
 }
 ```
 
+#### registerProgressEventListener
+
+```javascript
+class App extends React.Component{
+	loaded(api){
+		api.registerProgressEventListener((percent) => {
+			console.log("Video has now played ", percent, " percent")
+		})
+	}
+	render(){
+		return(
+			<Video sources={sources}  metaDataLoaded={this.loaded}/>
+		)
+	}
+}
+```
 

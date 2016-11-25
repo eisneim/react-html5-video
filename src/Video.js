@@ -10,7 +10,13 @@ class Video extends React.Component {
   constructor(props, context) {
     super(props, context)
     // store all public handler here, and return this api object to parent component;
-    this.api = {};
+    this.api = {
+      registerProgressEventListener: (listener) => {
+        this._onProgress = listener
+      },
+      // dummy method
+      _onProgress: function() {}
+    };
     var pubHandlers = ["togglePlay", "setTime", "fullscreen", "volume"];
     // save public handlers to api object
     pubHandlers.forEach(name => {
@@ -84,7 +90,10 @@ class Video extends React.Component {
     if (this.$video.currentTime >= this.$video.duration) {
       newState.isPlaying = false;
     }
-    this.setState(newState);
+
+    this.setState(newState, () => {
+      this.api._onProgress(percent)
+    });
   }
 
   _durationchange() {}
