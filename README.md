@@ -3,11 +3,11 @@
 ![preview](snapshot.jpg)
 [demo](https://github.com/eisneim/react-html5-video)
 
-##features:
+## features:
  - simple & easy
  - custom video overlay content( any html content on top of video )
 
-##TODO
+## TODO
  - UI for Fullscreen mode
  - ~~subtitle tracks~~
  - network error notification
@@ -19,7 +19,7 @@
  - use without browserify
  - complete tests
 
-##install
+## install
 ```
 npm install --save react-h5-video
 ```
@@ -44,7 +44,7 @@ class MyAewsomeApp extends React.Component{
 	}
 }
 ```
-##props
+## props
 ```javascript
 Video.propTypes = {
 	metaDataLoaded: 		React.PropTypes.func,// video's meta data loaded callback
@@ -80,7 +80,7 @@ Video.defaultProps = {
 }
 
 ```
-###video meta data loaded callback
+### video meta data loaded callback
 onece the meta data is loaded, you can get the info of this video(width,height,duration...etc), then you can use the returnd api to perform basic actions
 
 The returned api has these properties:
